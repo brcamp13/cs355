@@ -1,3 +1,13 @@
+(*BRANDON CAMPBELL
+  CS 355 FALL 2018 WSU
+  ASSIGNMENT 1
+ *)
+
+
+
+(*COPYING AND PASTING ENTIRE ASSIGNMENT WILL RUN ALL TESTS*)
+
+
 
 (*Question 1*)
 (*a*)
@@ -23,7 +33,6 @@ fun countInList (_, []) = 0
 	
 	
 (*Question 2*)
-(*Right now it works, but not really with duplicates*)
 fun listDiff ([], []) = []
 	| listDiff ([], _) = []
 	| listDiff (x::first, second) = 
@@ -33,7 +42,6 @@ fun listDiff ([], []) = []
 		
 				
 (*Question 3*)
-(*Took a LOT of parentheses manipulation*)
 fun firstN [] n = []
 	|firstN _ 0 = []
 	|firstN (x::rest) n = x::(firstN rest (n-1))
@@ -110,8 +118,6 @@ fun pairNleft (number , []) = [[]]
 		
 		
 (*TESTS*)
-
-
 
 fun existsTest () =
 	let
