@@ -26,10 +26,10 @@ and the ``a is a type variable that can only be substituted by types that suppor
 (*c*)
 (*General pseudocode: check first item of the list. If it is the value you are counting, return 1 + countInLists.
 Otherwise, return countInLists. I believe that this should work*)
-fun countInList (_, []) = 0
-	| countInList(searchValue, currentValue::inputList) =
-		if currentValue = searchValue then 1 + countInList(searchValue, inputList)
-		else countInList(searchValue, inputList);
+fun countInList _ [] = 0
+	| countInList searchValue (currentValue::inputList) =
+		if currentValue = searchValue then 1 + countInList searchValue inputList
+		else countInList searchValue inputList;
 	
 	
 (*Question 2*)

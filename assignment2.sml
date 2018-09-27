@@ -20,12 +20,7 @@ fun filter pred [] = []
 							  else (filter pred rest);
 							  
 							
-							
-							
-							
-							
-							
-							
+													
 (*1.*)
 
 (*a. numbersToSum*)
@@ -43,13 +38,35 @@ fun tailNumbersToSum sum accum [] = rev accum
 								  else (tailNumbersToSum (sum-x) (x::(accum)) rest);
 
 
+								  
 (*2*)
 (*Partition*)
-partition f [] = ([], [])
-	| partition f (x::rest) = 
-	(*we're going to need some sort of helper function that allows for 
-	the creation and merging of two separate lists from filter. Need
-	to study for interview now, so I will revisit this soon
+fun partition F L = (filter F L, filter (not o F) L); (*uses function composition to pass into filter the opposite of whatever function was initially passed in*)
+
+
+
+(*3*)
+(*Idea behind this process: 
+The newMap function takes the input list and returns a list of 1's and 0's representing the presence of a repeated elements
+So if there are no repeated elements, then the list would be comprised of all 0's, and if there is > 0 1's, then there is a repeated element somewhere
+Then, call filter upon this new list, with the function x > 0, meaning it will return a list of any 1's that exist in the mapped list
+So if there is a single element in this list, that means there is a repeated number within the list
+Therefore, compare this resulting list to the empty list in order to get the result, as empty list means no repeating elements which == true when compared to empty list
+*)
+fun areAllUnique List =
+	let
+		fun countInList _ [] = 0
+			| countInList searchValue (currentValue::inputList) =
+								if currentValue = searchValue then 1 + countInList searchValue inputList
+								else countInList searchValue inputList;
+		fun newMap f [] = []
+			| newMap f (x::rest) = (f x rest)::(newMap f rest); (*A slight alteration of map which allows for a function with two parameters*)
+	in	
+		if List = [] then false
+		else (filter (fn x => (x > 0)) (newMap countInList List)) = [] (*This filters n elements into a new list, where n corresponds to number of repeated elements. So comparing it to empty list returns correct bool (list should be empty if all unique, hence true)*)
+	end;
+	
+(*4*)
 		
 		
 								  
