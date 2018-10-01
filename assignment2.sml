@@ -67,27 +67,19 @@ fun areAllUnique List =
 	end;
 	
 (*4*)
-		
-		
-								  
 
+(*4a *)
 
+fun sum [] = 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	| sum (x::rest) = 
+		let 
+			fun add x y = x+y;
+			
+		in	
+			map add (fold add 0 x)	(*So general idea: apply the add function to each sublist (probably using map) and then cons it to new list. Then add up all elements in the new list. 
+		end; 
+			
+			
+			
+			
