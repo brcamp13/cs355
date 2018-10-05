@@ -70,15 +70,34 @@ fun areAllUnique List =
 
 (*4a *)
 
-fun sum [] = 
+fun sum [] = 0
+	| sum List = 
+		let	
+			fun add x y = x+y
+			fun combine x y = x @ y
+		in
+		
+		fold add 0 (fold combine [] List)  
+		
+		end;
+		
+(*4b*)
 
-	| sum (x::rest) = 
-		let 
-			fun add x y = x+y;
-			
-		in	
-			map add (fold add 0 x)	(*So general idea: apply the add function to each sublist (probably using map) and then cons it to new list. Then add up all elements in the new list. 
-		end; 
+fun sumOption [] = SOME(0)
+	| sumOption List = 
+		let
+			fun addOption x y = SOME((valOf (x)) + (valOf (y))) 
+			fun combineOption x y = x @ y
+		in
+		
+		fold addOption (SOME(0)) (fold combineOption [] List)
+
+		end;
+		
+		
+(*4c*)
+
+sumEither 
 			
 			
 			
