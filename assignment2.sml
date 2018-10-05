@@ -97,8 +97,28 @@ fun sumOption [] = SOME(0)
 		
 (*4c*)
 
-sumEither 
-			
+datatype either = Istring of string | Iint of int
+
+sumEither [] = Iint 0
+	| sumEither List = 
+		let
+		
+		in
+		
+		end;
+	
+	
+	
+
+
+
+
+
+
+
+
+
+	
 			
 			
 			
