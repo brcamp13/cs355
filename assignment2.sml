@@ -77,7 +77,7 @@ fun sum [] = 0
 			fun combine x y = x @ y
 		in
 		
-		fold add 0 (fold combine [] List)  
+		fold add 0 (fold combine [] List)  (*In essence, combine all lists and then add up all values in that compressed list*)
 		
 		end;
 		
@@ -90,22 +90,91 @@ fun sumOption [] = SOME(0)
 			fun combineOption x y = x @ y
 		in
 		
-		fold addOption (SOME(0)) (fold combineOption [] List)
+		fold addOption (SOME(0)) (fold combineOption [] List) (*Same idea as sum, but with int options instead of just ints*)
 
 		end;
 		
 		
-(*4c*)
-
-datatype either = Istring of string | Iint of int
-
-sumEither [] = Iint 0
-	| sumEither List = 
-		let
 		
-		in
 		
-		end;
+(*Due to the career fair and having two exams on Wednesday, I wasn't able to complete the remaining problems*)
+	
+fun numbersToSumTest () =
+ let 
+     val numbersToSumT1 = ( numbersToSum 4 [1,2,4,5,3,8,2,3]) = ([1,2])
+     val numbersToSumT2 = ( numbersToSum 6 [1,2,1,1,5,3,8,2,3]) = ([1,2,1,1])
+     val numbersToSumT3 = ( numbersToSum 0 [1,2,4,5,3,8,2,3]) = ([])
+ in 
+     print ("numbersToSum:-------------------- \n   test1: " ^ Bool.toString(numbersToSumT1) ^  "\n" ^
+            "   test2: " ^ Bool.toString(numbersToSumT2) ^ "\n" ^ 	
+            "   test3: " ^ Bool.toString(numbersToSumT3) ^ "\n")		
+
+end;
+
+		
+		
+		
+fun partitionTest () =
+ let 
+	 fun exists n [] = false |  exists n (x::rest) = if n=x then true else (exists n rest)
+     val partitionT1 = ( (partition (fn x => (x<=4)) [1,7,4,5,3,8,2,3]) = ([1,4,3,2,3],[7,5,8]) )
+     val partitionT2 = ( (partition null [[1,2],[1],[],[5],[],[6,7,8]]) = ([[],[]],[[1,2],[1],[5],[6,7,8]]) )
+     val partitionT3 = ( (partition (exists 1) [[1,2],[1],[],[5],[],[6,7,8]]) = ([[1,2],[1]],[[],[5],[],[6,7,8]]) )
+ in 
+     print ("partition:-------------------- \n   test1: " ^ Bool.toString(partitionT1) ^  "\n" ^
+            "   test2: " ^ Bool.toString(partitionT2) ^ "\n" ^ 	
+            "   test3: " ^ Bool.toString(partitionT3) ^ "\n")		
+
+end;
+
+
+fun areAllUniqueTest () =
+ let 
+     val areAllUniqueT1 = ( areAllUnique [1,2,3,4,5,6]) = (true)
+     val areAllUniqueT2 = ( areAllUnique [1,2,3,4,5,5,6]) = (false)
+     val areAllUniqueT3 = ( areAllUnique [1,2,3,4,5,6,7,8,9,100,9]) = (false)
+ in 
+     print ("areAllUnique:-------------------- \n   test1: " ^ Bool.toString(areAllUniqueT1) ^  "\n" ^
+            "   test2: " ^ Bool.toString(areAllUniqueT2) ^ "\n" ^ 	
+            "   test3: " ^ Bool.toString(areAllUniqueT3) ^ "\n")		
+
+end;
+
+fun sumTest () =
+ let 
+     val sumT1 = ( sum [[1,2,3],[4,5,6]]) = (21)
+     val sumT2 = ( sum [[3,4,5], [0,1,4]]) = (17)
+     val sumT3 = ( sum []) = (0)
+ in 
+     print ("sum:-------------------- \n   test1: " ^ Bool.toString(sumT1) ^  "\n" ^
+            "   test2: " ^ Bool.toString(sumT2) ^ "\n" ^ 	
+            "   test3: " ^ Bool.toString(sumT3) ^ "\n")		
+
+end;
+
+fun sumOptionTest () =
+ let 
+     val sumOptionT1 = ( sumOption [[SOME(1),SOME(2),SOME(3)],[SOME(4),SOME(5),SOME(6)]]) = (SOME(21))
+     val sumOptionT2 = ( sumOption [[SOME(3),SOME(4),SOME(5)], [SOME(0),SOME(1),SOME(4)]]) = (SOME(17))
+     val sumOptionT3 = ( sumOption []) = (SOME(0))
+ in 
+     print ("sumOption:-------------------- \n   test1: " ^ Bool.toString(sumOptionT1) ^  "\n" ^
+            "   test2: " ^ Bool.toString(sumOptionT2) ^ "\n" ^ 	
+            "   test3: " ^ Bool.toString(sumOptionT3) ^ "\n")		
+
+end;
+
+
+
+
+
+
+val _ = numbersToSumTest();
+val _ = partitionTest();
+val _ = areAllUniqueTest();
+val _ = sumTest();
+val _ = sumOptionTest();
+	
 	
 	
 	
