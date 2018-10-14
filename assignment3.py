@@ -19,7 +19,7 @@ def add_dict(hours_worked):
             elif c is 'Sun':
                 return_dict['Sun'] += 1
 
-    return
+    return return_dict
 
 
 
