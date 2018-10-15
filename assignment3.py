@@ -15,7 +15,7 @@ def add_dict(hours_worked):
     # I understand that you didn't want this hardcoded, but makes readability way better
     return_dict = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0}
 
-    # If you encounter a given day of the week, increment it's return dictionary with key
+    # If you encounter a given day of the week, increment its return dictionary with key
     for a, b in hours_worked.items():
         for c, d in b.items():
             if c is 'Mon':
