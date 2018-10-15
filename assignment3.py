@@ -74,7 +74,6 @@ def test_add_dict():
             ({'Mon': 0, 'Tue': 3, 'Wed': 2, 'Thu': 8, 'Fri': 0, 'Sat': 2, 'Sun': 0})
 
     print(test1)
-
     print(test2)
 
 
