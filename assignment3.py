@@ -62,6 +62,54 @@ def add_dict_n(list_of_dicts):
     return dict(reduce(helper_add_dict_n, mapped_dict, empty_counter))
 
 
+# (2a)
+
+
+def lookup_val(list_of_dicts, search_key):
+
+    for item in reversed(list_of_dicts):    # Reversing the input makes it so you traverse from the 'end'
+        for key, value in item.items():
+            if key == search_key:
+                return value
+    print("Key not found")
+    return None
+
+
+# (2b)
+
+
+def lookup_val_2(tuple_list, search_key):
+
+    # Counter will keep track of which index you are currently at (as you are required to skip the 2nd and 4th index
+    # (3rd and 5th item))
+    counter = len(tuple_list) - 1
+    dictionaries = reversed([item[1] for item in tuple_list])  # Get 2nd value of each tuple in a new list, then reverse
+    for dictionary in dictionaries:
+        for key, value in dictionary.items():
+            if counter == 2 or counter == 4:    # If you are at the dictionary to skip, then skip
+                counter -= 1
+                continue
+            elif key == search_key:
+                return value
+            else:
+                counter -= 1
+
+    return None
+
+
+# (3)
+
+# Looking into why there's some strange output for some test cases
+def num_paths(m, n, blocks):
+
+    if(m, n) in blocks:
+        return 0
+    elif m == 1 or n == 1:
+        return 1
+    else:
+        return num_paths(m - 1, n, blocks) + num_paths(m, n - 1, blocks)
+
+
 # ~~~~~~~~TEST FUNCTIONS~~~~~~~~
 
 
@@ -103,5 +151,51 @@ def test_add_dict_n():
     print(test2)
 
 
+def test_lookup_val():
+
+    test1 = ((lookup_val([{"x": 1, "y": True, "z": "found"}, {"x": 2}, {"y": False}], "x")) == 2)
+    test2 = ((lookup_val([{"x": 1, "y": True, "z": "found"}, {"x": 2}, {"y": False}], "y")) == (not True))
+    test3 = ((lookup_val([{"H": "Hello World", "y": True, "z": "found"}, {"x": 2}, {"y": False}], "H")) == "Hello World")
+
+    print(test1)
+    print(test2)
+    print(test3)
 
 
+def test_lookup_val_2():
+
+    test1 = ((lookup_val_2([(0, {"x": 0, "y": True, "z": "zero"}), (0, {"x": 1}), (1, {"y": False}),
+                            (1, {"x": 3, "z": "three"}), (2, {})], "x")) == 1)
+
+    test2 = ((lookup_val_2([(0, {"x": 0, "y": True, "z": "zero"}), (0, {"x": 1}), (1, {"y": False}),
+                            (1, {"x": 3, "z": "three"}), (2, {})], "z")) == "three")
+
+    test3 = ((lookup_val_2([(0, {"x": 0, "y": True, "z": "zero"}), (0, {"x": 1}), (1, {"y": False}),
+                            (1, {"x": 3, "z": "three"}), (2, {})], "y")) == True)
+
+    print(test1)
+    print(test2)
+    print(test3)
+
+
+def num_paths_test():
+
+    test1 = ((num_paths(2, 2, [(2, 1)])) == 1)
+    test2 = ((num_paths(3, 3, [(2, 1)])) == 4)
+
+    print(test1)
+    print(test2)
+
+
+def run_all_tests():
+
+    print("add_dict test")
+    test_add_dict()
+    print("add_dict_n test")
+    test_add_dict_n()
+    print("lookup_val test")
+    test_lookup_val()
+    print("lookup_val_2 test")
+    test_lookup_val_2()
+    print("num_paths test")
+    num_paths_test()
