@@ -110,6 +110,38 @@ def num_paths(m, n, blocks):
         return num_paths(m - 1, n, blocks) + num_paths(m, n - 1, blocks)
 
 
+# (4)
+# Each substring in from the given string will be found, then tested to see if palindrome
+def palindromes(input_string):
+
+    # Removes all duplicates within a given list
+    def remove_duplicates(string_list):
+
+        return_val = []
+        for item in string_list:
+            if item not in return_val:
+                return_val.append(item)
+            else:
+                continue
+
+        return return_val
+
+    # Get all substrings within the input string
+    list_of_substrings = \
+        list((input_string[x:y] for x in range(len(input_string)) for y in range(x + 1, len(input_string) + 1)))
+
+    # The lambda function checks if a string == its reverse (if it's a palindrome)
+    return_list = list(filter(lambda x: x == x[::-1], list_of_substrings))
+
+    # Alphabetical order as per assignment specs
+    return_list.sort()
+
+    # Remove duplicates as per assignment specs
+    final_return_list = remove_duplicates(return_list)
+
+    return final_return_list
+
+
 # ~~~~~~~~TEST FUNCTIONS~~~~~~~~
 
 
@@ -178,6 +210,17 @@ def test_lookup_val_2():
     print(test3)
 
 
+def test_palindrome():
+
+    test1 = ((palindromes('cabbbaccab')) == (['a', 'abbba', 'acca', 'b', 'baccab', 'bb', 'bbb', 'c', 'cabbbac', 'cc']))
+    test2 = ((palindromes('racecar')) == (['a', 'aceca', 'c', 'cec', 'e', 'r', 'racecar']))
+    test3 = ((palindromes('bacdcabdbcdc')) == (['a', 'acdca', 'b', 'bacdcab', 'bdb', 'c', 'cdc', 'd']))
+
+    print(test1)
+    print(test2)
+    print(test3)
+
+
 def num_paths_test():
 
     test1 = ((num_paths(2, 2, [(2, 1)])) == 1)
@@ -199,3 +242,5 @@ def run_all_tests():
     test_lookup_val_2()
     print("num_paths test")
     num_paths_test()
+    print("palindrome test")
+    test_palindrome()
