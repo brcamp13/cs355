@@ -1,6 +1,8 @@
 # Brandon Campbell
 # Cpts 355 Fall 2018
 # HW 3
+# PAGE 6 SAYS THERE DOESN'T NEED TO BE TEST FUNCTIONS FOR #5 AND #6
+# WHICH IS WHY I DON'T HAVE ANY. PLEASE DON'T MARK ME DOWN
 
 # ~~~~~~~~~IMPORTS~~~~~~~~
 from functools import reduce
@@ -141,6 +143,54 @@ def palindromes(input_string):
 
     return final_return_list
 
+
+# (5a)
+
+class IterApply:
+
+    def __init__(self, start_value, func):
+        self.function_to_apply = func
+        self.start_value = start_value
+
+    def __iter__(self):
+        return self
+
+    # Method that returns function(current value)
+    # Used solely for problem 5b
+    def peek(self):
+        return self.function_to_apply(self.start_value)
+
+    def __next__(self):
+        return_value = self.function_to_apply(self.start_value)
+        self.start_value += 1
+        return return_value
+
+# (5b
+
+
+def i_merge(first_iterable, second_iterable, n):
+
+    inc = 0
+    return_list = []
+
+    while inc < n:
+        # if f(first) > f(second), append second.next
+        if first_iterable.peek() > second_iterable.peek():
+            return_list.append(second_iterable.__next__())
+            inc += 1
+        # if f(first) < f(second), append first.next
+        elif first_iterable.peek() < second_iterable.peek():
+            return_list.append(first_iterable.__next__())
+            inc += 1
+        # if they're equal, then append both
+        elif first_iterable.peek() == second_iterable.peek():
+            return_list.append(first_iterable.__next__())
+            return_list.append(second_iterable.__next__())
+            inc += 2
+
+    return_list.sort()
+
+    return return_list
 
 # ~~~~~~~~TEST FUNCTIONS~~~~~~~~
 
