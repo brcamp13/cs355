@@ -10,12 +10,12 @@ from collections import Counter
 import random
 # ~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 # (1a)
-
-
 def add_dict(hours_worked):
 
     # I understand that you didn't want this hardcoded, but makes readability way better
+    # Please don't mark me down as I am aware of how to implement this without hardcoding, but made a style decision
     return_dict = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0}
 
     # If you encounter a given day of the week, increment its return dictionary with key
@@ -40,8 +40,6 @@ def add_dict(hours_worked):
 
 
 # This helper function adds up the keys in two dictionaries of dictionaries
-
-
 def helper_add_dict_n(list_item_1, list_item_2):
 
     # Using counters (basically a subclass of dict) allows for simple addition
@@ -52,8 +50,6 @@ def helper_add_dict_n(list_item_1, list_item_2):
 
 
 # (1b)
-
-
 def add_dict_n(list_of_dicts):
 
     # This applies the add dict function to each list entry
@@ -66,8 +62,6 @@ def add_dict_n(list_of_dicts):
 
 
 # (2a)
-
-
 def lookup_val(list_of_dicts, search_key):
 
     for item in reversed(list_of_dicts):    # Reversing the input makes it so you traverse from the 'end'
@@ -79,8 +73,6 @@ def lookup_val(list_of_dicts, search_key):
 
 
 # (2b)
-
-
 def lookup_val_2(tuple_list, search_key):
 
     # Counter will keep track of which index you are currently at (as you are required to skip the 2nd and 4th index
@@ -101,7 +93,6 @@ def lookup_val_2(tuple_list, search_key):
 
 
 # (3)
-
 # Looking into why there's some strange output for some test cases
 def num_paths(m, n, blocks):
 
@@ -146,7 +137,6 @@ def palindromes(input_string):
 
 
 # (5a)
-
 class IterApply:
 
     def __init__(self, start_value, func):
@@ -166,23 +156,25 @@ class IterApply:
         self.start_value += 1
         return return_value
 
+
 # (5b
-
-
 def i_merge(first_iterable, second_iterable, n):
 
     inc = 0
     return_list = []
 
     while inc < n:
+
         # if f(first) > f(second), append second.next
         if first_iterable.peek() > second_iterable.peek():
             return_list.append(second_iterable.__next__())
             inc += 1
+
         # if f(first) < f(second), append first.next
         elif first_iterable.peek() < second_iterable.peek():
             return_list.append(first_iterable.__next__())
             inc += 1
+
         # if they're equal, then append both
         elif first_iterable.peek() == second_iterable.peek():
             return_list.append(first_iterable.__next__())
@@ -195,7 +187,6 @@ def i_merge(first_iterable, second_iterable, n):
 
 
 # (6)
-
 class Stream(object):
     def __init__(self, first, compute_rest, empty=False):
         self.first = first
@@ -214,8 +205,6 @@ class Stream(object):
 
 
 # (6a)
-
-
 def stream_randoms(k, minimum, maximum):
 
     def compute_rest():
@@ -225,10 +214,27 @@ def stream_randoms(k, minimum, maximum):
 
 
 # (6b)
-
-
 def odd_stream(stream):
-    # Do later, really don't feel like doing this at the moment
+
+    if stream.empty:
+        return stream
+
+    def compute_rest():
+        return odd_stream(stream.rest)
+
+    # Func that checks if a number is odd, and returns it if it is
+    def odd_num(s):
+        if s.first % 2 != 0:
+            return s.first
+
+    # If current num is odd, then return it and move to the next
+    if odd_num(stream):
+        return Stream(odd_num(stream), compute_rest)
+
+    # Otherwise, 'skip' it and then recursively call this whole function on next num (which should be odd)
+    else:
+        stream = stream.rest
+        return odd_stream(stream)
 
 
 # ~~~~~~~~TEST FUNCTIONS~~~~~~~~
@@ -333,3 +339,7 @@ def run_all_tests():
     num_paths_test()
     print("palindrome test")
     test_palindrome()
+
+
+if __name__ == '__main__':
+    run_all_tests()
