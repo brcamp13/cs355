@@ -7,6 +7,7 @@
 # ~~~~~~~~~IMPORTS~~~~~~~~
 from functools import reduce
 from collections import Counter
+import random
 # ~~~~~~~~~~~~~~~~~~~~~~~~
 
 # (1a)
@@ -191,6 +192,44 @@ def i_merge(first_iterable, second_iterable, n):
     return_list.sort()
 
     return return_list
+
+
+# (6)
+
+class Stream(object):
+    def __init__(self, first, compute_rest, empty=False):
+        self.first = first
+        self._compute_rest = compute_rest
+        self.empty = empty
+        self._rest = None
+        self._computed = False
+
+    @property
+    def rest(self):
+        assert not self.empty, 'Empty streams have no rest.'
+        if not self._computed:
+            self._rest = self._compute_rest()
+            self._computed = True
+        return self._rest
+
+
+# (6a)
+
+
+def stream_randoms(k, minimum, maximum):
+
+    def compute_rest():
+        return stream_randoms(random.randint(minimum, maximum), minimum, maximum)
+
+    return Stream(k, compute_rest)
+
+
+# (6b)
+
+
+def odd_stream(stream):
+    # Do later, really don't feel like doing this at the moment
+
 
 # ~~~~~~~~TEST FUNCTIONS~~~~~~~~
 
