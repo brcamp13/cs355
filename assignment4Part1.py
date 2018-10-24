@@ -66,7 +66,10 @@ def dict_push(d):
 # in dictPush.
 
 def define(name, value):
-    pass
+
+    global dict_stack
+    dict_to_push = {name: value}
+    dict_stack[-1].update(dict_to_push)
 
 
 # add name:value to the top dictionary in the dictionary stack. (Keep the ‘/’ in
