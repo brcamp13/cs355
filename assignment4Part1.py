@@ -77,7 +77,15 @@ def define(name, value):
 # name and value from operand stack and call the “define” function.
 
 def lookup(name):
-    pass
+
+    global dict_stack
+    for item in reversed(dict_stack):
+        for key in item:
+            if key == name:
+                return item[key]
+                break
+
+    print('No dictionary with that name in the dictionary stack!')
 
 
 # return the value associated with name.
@@ -91,9 +99,198 @@ def lookup(name):
 # Make sure to check the operand stack has the correct number of parameters and
 # types of the parameters are correct.
 
+def add():
+
+    global op_stack
+
+    # Checks if there are enough operands in the stack
+    if len(op_stack) >= 2:
+
+        val_1 = op_pop()
+        # Checks if the first value popped is an integer. If so, then it continues
+        if type(val_1) == int:
+
+            val_2 = op_pop()
+            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            if type(val_2) == int:
+                return_val = val_1 + val_2
+                op_push(return_val)
+            else:
+                op_push(val_2)
+                op_push(val_1)
+                print('One or more of the values was not an integer!')
+        else:
+            op_push(val_1)
+            print('One or more of the values was not an integer')
+    else:
+        print('Not enough values in stack to perform the operation!')
+
+
+def sub():
+
+    global op_stack
+
+    # Checks if there are enough operands in the stack
+    if len(op_stack) >= 2:
+
+        val_1 = op_pop()
+        # Checks if the first value popped is an integer. If so, then it continues
+        if type(val_1) == int:
+
+            val_2 = op_pop()
+            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            if type(val_2) == int:
+                return_val = val_2 - val_1
+                op_push(return_val)
+            else:
+                op_push(val_2)
+                op_push(val_1)
+                print('One or more of the values was not an integer!')
+        else:
+            op_push(val_1)
+            print('One or more of the values was not an integer')
+    else:
+        print('Not enough values in stack to perform the operation!')
+
+
+def mul():
+
+    global op_stack
+
+    # Checks if there are enough operands in the stack
+    if len(op_stack) >= 2:
+
+        val_1 = op_pop()
+        # Checks if the first value popped is an integer. If so, then it continues
+        if type(val_1) == int:
+
+            val_2 = op_pop()
+            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            if type(val_2) == int:
+                return_val = val_1 * val_2
+                op_push(return_val)
+            else:
+                op_push(val_2)
+                op_push(val_1)
+                print('One or more of the values was not an integer!')
+        else:
+            op_push(val_1)
+            print('One or more of the values was not an integer')
+    else:
+        print('Not enough values in stack to perform the operation!')
+
+
+def div():
+
+    global op_stack
+
+    # Checks if there are enough operands in the stack
+    if len(op_stack) >= 2:
+
+        val_1 = op_pop()
+        # Checks if the first value popped is an integer. If so, then it continues
+        if type(val_1) == int:
+
+            val_2 = op_pop()
+            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            if type(val_2) == int:
+                return_val = val_2/val_1
+                op_push(return_val)
+            else:
+                op_push(val_2)
+                op_push(val_1)
+                print('One or more of the values was not an integer!')
+        else:
+            op_push(val_1)
+            print('One or more of the values was not an integer')
+    else:
+        print('Not enough values in stack to perform the operation!')
+
+
+def eq():
+
+    global op_stack
+
+    # Checks if there are enough operands in the stack
+    if len(op_stack) >= 2:
+
+        val_1 = op_pop()
+        # Checks if the first value popped is an integer. If so, then it continues
+        if type(val_1) == int:
+
+            val_2 = op_pop()
+            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            if type(val_2) == int:
+                return_val = val_1 == val_2
+                op_push(return_val)
+            else:
+                op_push(val_2)
+                op_push(val_1)
+                print('One or more of the values was not an integer!')
+        else:
+            op_push(val_1)
+            print('One or more of the values was not an integer')
+    else:
+        print('Not enough values in stack to perform the operation!')
+
+
+def lt():
+
+    global op_stack
+
+    # Checks if there are enough operands in the stack
+    if len(op_stack) >= 2:
+
+        val_1 = op_pop()
+        # Checks if the first value popped is an integer. If so, then it continues
+        if type(val_1) == int:
+
+            val_2 = op_pop()
+            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            if type(val_2) == int:
+                return_val = val_2 < val_1
+                op_push(return_val)
+            else:
+                op_push(val_2)
+                op_push(val_1)
+                print('One or more of the values was not an integer!')
+        else:
+            op_push(val_1)
+            print('One or more of the values was not an integer')
+    else:
+        print('Not enough values in stack to perform the operation!')
+
+
+def gt():
+
+    global op_stack
+
+    # Checks if there are enough operands in the stack
+    if len(op_stack) >= 2:
+
+        val_1 = op_pop()
+        # Checks if the first value popped is an integer. If so, then it continues
+        if type(val_1) == int:
+
+            val_2 = op_pop()
+            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            if type(val_2) == int:
+                return_val = val_2 > val_1
+                op_push(return_val)
+            else:
+                op_push(val_2)
+                op_push(val_1)
+                print('One or more of the values was not an integer!')
+        else:
+            op_push(val_1)
+            print('One or more of the values was not an integer')
+    else:
+        print('Not enough values in stack to perform the operation!')
+
+
 # --------------------------- 15% -------------------------------------
 # Array operators: define the array operators length, get
-#--------------------------- 15% -------------------------------------
+# --------------------------- 15% -------------------------------------
 # Boolean operators: define the boolean operators psAnd, psOr, psNot
 # Remember that these take boolean operands only. Anything else is an error
 
@@ -108,3 +305,5 @@ def lookup(name):
 # Note: The psDef operator will pop the value and name from the opstack and
 # call your own "define" operator (pass those values as parameters). Note that
 # psDef()won't have any parameters.
+
+
