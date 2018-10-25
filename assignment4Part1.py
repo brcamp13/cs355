@@ -290,6 +290,32 @@ def gt():
 
 # --------------------------- 15% -------------------------------------
 # Array operators: define the array operators length, get
+
+def length():
+
+    global op_stack
+
+    # Get the array that is at the top of the stack
+    arr = op_pop()
+
+    # Get its length and then push it to the stack
+    arr_length = len(arr)
+    op_push(arr_length)
+
+
+def get():
+
+    global op_stack
+
+    # Get the index and get the array
+    ind = op_pop()
+    arr = op_pop()
+
+    # Get Array[index] and push to the stack
+    push_val = arr[ind]
+    op_push(push_val)
+
+
 # --------------------------- 15% -------------------------------------
 # Boolean operators: define the boolean operators psAnd, psOr, psNot
 # Remember that these take boolean operands only. Anything else is an error
