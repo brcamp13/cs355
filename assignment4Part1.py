@@ -69,11 +69,8 @@ def define(name, value):
 
     global dict_stack
 
-    if name[0] != '/':
-        print('The name does not start with \' / \'')
-    else:
-        dict_to_push = {name: value}
-        dict_stack[-1].update(dict_to_push)
+    dict_to_push = {name: value}
+    dict_stack[-1].update(dict_to_push)
 
 
 # add name:value to the top dictionary in the dictionary stack. (Keep the ‘/’ in
@@ -488,5 +485,65 @@ def stack():
 # Note: The psDef operator will pop the value and name from the opstack and
 # call your own "define" operator (pass those values as parameters). Note that
 # psDef()won't have any parameters.
+
+
+def ps_dict():
+    pass
+
+
+def begin():
+
+    global op_stack
+
+    if len(op_stack) < 1:
+        print("There aren't any values on the operand stack ")
+
+    else:
+        value_1 = op_pop()
+
+        if type(value_1) == dict:
+            dict_push(value_1)
+        else:
+            op_push(value_1)
+            print("The value at the top of the operand stack is not a dictionary.")
+
+
+def end():
+
+    global dict_stack
+
+    if len(dict_stack) < 1:
+        print("There aren't any values on the dictionary stack ")
+
+    else:
+        dict_pop()
+
+
+def ps_def():
+
+    global op_stack
+
+    # Check if there are enough values on the operand stack and if values are in the correct format
+    if len(op_stack) < 2:
+        print("There are not enough values on the operand stack to perform the operation")
+        return
+
+    # Get the first two variables from the operand stack
+    value_1 = op_pop()
+    value_2 = op_pop()
+
+    if value_2[0] != '/':
+        op_push(value_2)
+        op_push(value_1)
+        print("The entry is not in the correct format")
+
+        # Take the '/' from the name and then add to the dictionary at the top of the dict stack
+    else:
+        new_value_2 = value_2[1:]
+        define(new_value_2, value_1)
+
+
+
+
 
 
