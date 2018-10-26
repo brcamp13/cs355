@@ -446,12 +446,18 @@ def copy():
     # Get the top value of the stack which represents the amount of things to copy
     elements_to_copy = op_pop()
 
-    # Reverse this so you can traverse from the back
-    new_array = list(reversed(op_stack))[:elements_to_copy]
+    # Check if there enough elements to perform the operation
+    if len(op_stack) < elements_to_copy():
+        op_push(elements_to_copy)
+        print("There are not enough elements in the stack to perform this operation")
 
-    # The array of items to copy will be reverse order of what we want, so reverse it and push each value
-    for value in list(reversed(new_array)):
-        op_push(value)
+    else:
+        # Reverse this so you can traverse from the back
+        new_array = list(reversed(op_stack))[:elements_to_copy]
+
+        # The array of items to copy will be reverse order of what we want, so reverse it and push each value
+        for value in list(reversed(new_array)):
+            op_push(value)
 
 
 def clear():
