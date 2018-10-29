@@ -109,11 +109,11 @@ def add():
 
         val_1 = op_pop()
         # Checks if the first value popped is an integer. If so, then it continues
-        if type(val_1) == int:
+        if type(val_1) == int or type(val_1) == float:
 
             val_2 = op_pop()
             # If both are integers, then perform the operation. Otherwise, push all values back to stack
-            if type(val_2) == int:
+            if type(val_2) == int or type(val_2) == float:
                 return_val = val_1 + val_2
                 op_push(return_val)
             else:
@@ -136,11 +136,11 @@ def sub():
 
         val_1 = op_pop()
         # Checks if the first value popped is an integer. If so, then it continues
-        if type(val_1) == int:
+        if type(val_1) == int or type(val_1) == float:
 
             val_2 = op_pop()
             # If both are integers, then perform the operation. Otherwise, push all values back to stack
-            if type(val_2) == int:
+            if type(val_2) == int or type(val_2) == float:
                 return_val = val_2 - val_1
                 op_push(return_val)
             else:
@@ -163,11 +163,11 @@ def mul():
 
         val_1 = op_pop()
         # Checks if the first value popped is an integer. If so, then it continues
-        if type(val_1) == int:
+        if type(val_1) == int or type(val_1) == float:
 
             val_2 = op_pop()
             # If both are integers, then perform the operation. Otherwise, push all values back to stack
-            if type(val_2) == int:
+            if type(val_2) == int or type(val_2) == float:
                 return_val = val_1 * val_2
                 op_push(return_val)
             else:
@@ -190,11 +190,11 @@ def div():
 
         val_1 = op_pop()
         # Checks if the first value popped is an integer. If so, then it continues
-        if type(val_1) == int:
+        if type(val_1) == int or type(val_1) == float:
 
             val_2 = op_pop()
             # If both are integers, then perform the operation. Otherwise, push all values back to stack
-            if type(val_2) == int:
+            if type(val_2) == int or type(val_2) == float:
                 return_val = val_2/val_1
                 op_push(return_val)
             else:
@@ -217,11 +217,11 @@ def eq():
 
         val_1 = op_pop()
         # Checks if the first value popped is an integer. If so, then it continues
-        if type(val_1) == int:
+        if type(val_1) == int or type(val_1) == float:
 
             val_2 = op_pop()
             # If both are integers, then perform the operation. Otherwise, push all values back to stack
-            if type(val_2) == int:
+            if type(val_2) == int or type(val_2) == float:
                 return_val = val_1 == val_2
                 op_push(return_val)
             else:
@@ -244,11 +244,11 @@ def lt():
 
         val_1 = op_pop()
         # Checks if the first value popped is an integer. If so, then it continues
-        if type(val_1) == int:
+        if type(val_1) == int or type(val_1) == float:
 
             val_2 = op_pop()
             # If both are integers, then perform the operation. Otherwise, push all values back to stack
-            if type(val_2) == int:
+            if type(val_2) == int or type(val_2) == float:
                 return_val = val_2 < val_1
                 op_push(return_val)
             else:
@@ -271,11 +271,11 @@ def gt():
 
         val_1 = op_pop()
         # Checks if the first value popped is an integer. If so, then it continues
-        if type(val_1) == int:
+        if type(val_1) == int or type(val_1) == float:
 
             val_2 = op_pop()
             # If both are integers, then perform the operation. Otherwise, push all values back to stack
-            if type(val_2) == int:
+            if type(val_2) == int or type(val_2) == float:
                 return_val = val_2 > val_1
                 op_push(return_val)
             else:
@@ -329,11 +329,11 @@ def ps_and():
     if len(op_stack) >= 2:
 
         val_1 = op_pop()
-        # Checks if the first value popped is an integer. If so, then it continues
+        # Checks if the first value popped is a bool. If so, then it continues
         if type(val_1) == bool:
 
             val_2 = op_pop()
-            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            # If both are bool, then perform the operation. Otherwise, push all values back to stack
             if type(val_2) == bool:
                 return_val = val_1 and val_2
                 op_push(return_val)
@@ -356,11 +356,11 @@ def ps_or():
     if len(op_stack) >= 2:
 
         val_1 = op_pop()
-        # Checks if the first value popped is an integer. If so, then it continues
+        # Checks if the first value popped is a bool. If so, then it continues
         if type(val_1) == bool:
 
             val_2 = op_pop()
-            # If both are integers, then perform the operation. Otherwise, push all values back to stack
+            # If both are bools, then perform the operation. Otherwise, push all values back to stack
             if type(val_2) == bool:
                 return_val = val_1 or val_2
                 op_push(return_val)
@@ -383,7 +383,7 @@ def ps_not():
     if len(op_stack) >= 1:
 
         val_1 = op_pop()
-        # Checks if the first value popped is an integer. If so, then it continues
+        # Checks if the first value popped is a bool. If so, then it continues
         if type(val_1) == bool:
             return_value = not val_1
             op_push(return_value)
@@ -488,7 +488,21 @@ def stack():
 
 
 def ps_dict():
-    pass
+
+    global op_stack
+
+    if len(op_stack) > 0:
+
+        new_dict = {}
+        dict_size = op_pop()
+
+        for i in range(dict_size):
+            new_dict[i] = None
+
+        op_push(new_dict)
+
+    else:
+        print("Operation cannot be performed as the operand stack is empty")
 
 
 def begin():
