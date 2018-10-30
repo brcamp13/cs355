@@ -1,9 +1,16 @@
+# -*- coding: utf-8 -*-
+
+
 # Brandon Campbell
 # Fall 2018 CPTS 355
 # HW 4 Part 1
 
 # ------------------------- 10% -------------------------------------
 # The operand stack: define the operand stack and its operations
+
+
+op_stack = []  # assuming top of the stack is the end of the list
+dict_stack = []  # assuming top of the stack is the end of the list
 
 
 def op_pop():
@@ -66,7 +73,7 @@ def define(name, value):
     global dict_stack
 
     dict_to_push = {name: value}
-    dict_stack[-1].update(dict_to_push)
+    dict_stack[-1:].update(dict_to_push)
 
 
 # add name:value to the top dictionary in the dictionary stack. (Keep the ‘/’ in
@@ -548,10 +555,6 @@ def ps_def():
         define(new_value_2, value_1)
 
 
-op_stack = []  # assuming top of the stack is the end of the list
-dict_stack = []  # assuming top of the stack is the end of the list
-
-
 # ------- Part 1 TEST CASES--------------
 def test_define():
     define("/n1", 4)
@@ -563,7 +566,7 @@ def test_define():
 def test_lookup():
     opPush("/n1")
     opPush(3)
-    psDef()
+    ps_def()
     if lookup("n1") != 3:
         return False
     return True
@@ -596,156 +599,156 @@ def test_mul():
         return False
     return True
 
-# THIS IS WHERE YOU LEFT OFF FOR CHANGING FUNCTION NAMES
+
 def test_div():
-    opPush(10)
-    opPush(4)
+    op_push(10)
+    op_push(4)
     div()
-    if opPop() != 2.5:
+    if op_pop() != 2.5:
         return False
     return True
 
 
 # Comparison operators tests
 def test_eq():
-    opPush(6)
-    opPush(6)
+    op_push(6)
+    op_push(6)
     eq()
-    if opPop() != True:
+    if op_pop() is False:
         return False
     return True
 
 
 def test_lt():
-    opPush(3)
-    opPush(6)
+    op_push(3)
+    op_push(6)
     lt()
-    if opPop() != True:
+    if op_pop() is False:
         return False
     return True
 
 
 def test_gt():
-    opPush(3)
-    opPush(6)
+    op_push(3)
+    op_push(6)
     gt()
-    if opPop() != False:
+    if op_pop() is False:
         return False
     return True
 
 
 # boolean operator tests
 def test_ps_and():
-    opPush(True)
-    opPush(False)
-    psAnd()
-    if opPop() != False:
+    op_push(True)
+    op_push(False)
+    ps_and()
+    if op_pop() is True:
         return False
     return True
 
 
 def test_ps_or():
-    opPush(True)
-    opPush(False)
-    psOr()
-    if opPop() != True:
+    op_push(True)
+    op_push(False)
+    ps_or()
+    if op_pop() is False:
         return False
     return True
 
 
 def test_ps_not():
-    opPush(True)
-    psNot()
-    if opPop() != False:
+    op_push(True)
+    ps_not()
+    if op_pop() is True:
         return False
     return True
 
 
 # Array operator tests
 def test_length():
-    opPush([1, 2, 3, 4, 5])
+    op_push([1, 2, 3, 4, 5])
     length()
-    if opPop() != 5:
+    if op_pop() != 5:
         return False
     return True
 
 
 def test_get():
-    opPush([1, 2, 3, 4, 5])
-    opPush(4)
+    op_push([1, 2, 3, 4, 5])
+    op_push(4)
     get()
-    if opPop() != 5:
+    if op_pop() != 5:
         return False
     return True
 
 
 # stack manipulation functions
 def test_dup():
-    opPush(10)
+    op_push(10)
     dup()
-    if opPop() != opPop():
+    if op_pop() != op_pop():
         return False
     return True
 
 
 def test_exch():
-    opPush(10)
-    opPush("/x")
+    op_push(10)
+    op_push("/x")
     exch()
-    if opPop() != 10 and opPop() != "/x":
+    if op_pop() != 10 and op_pop() != "/x":
         return False
     return True
 
 
 def test_pop():
-    l1 = len(opstack)
-    opPush(10)
+    l1 = len(op_stack)
+    op_push(10)
     pop()
-    l2 = len(opstack)
+    l2 = len(op_stack)
     if l1 != l2:
         return False
     return True
 
 
 def test_copy():
-    opPush(1)
-    opPush(2)
-    opPush(3)
-    opPush(4)
-    opPush(5)
-    opPush(2)
+    op_push(1)
+    op_push(2)
+    op_push(3)
+    op_push(4)
+    op_push(5)
+    op_push(2)
     copy()
-    if opPop() != 5 and opPop() != 4 and opPop() != 5 and opPop() != 4 and opPop() != 3 and opPop() != 2:
+    if op_pop() != 5 and op_pop() != 4 and op_pop() != 5 and op_pop() != 4 and op_pop() != 3 and op_pop() != 2:
         return False
     return True
 
 
 def test_clear():
-    opPush(10)
-    opPush("/x")
+    op_push(10)
+    op_push("/x")
     clear()
-    if len(opstack) != 0:
+    if len(op_stack) != 0:
         return False
     return True
 
 
 # dictionary stack operators
 def test_dict():
-    opPush(1)
+    op_push(1)
     psDict()
-    if opPop() != {}:
+    if op_pop() != {}:
         return False
     return True
 
 
 def test_begin_end():
-    opPush("/x")
-    opPush(3)
+    op_push("/x")
+    op_push(3)
     psDef()
-    opPush({})
+    op_push({})
     begin()
-    opPush("/x")
-    opPush(4)
+    op_push("/x")
+    op_push(4)
     psDef()
     end()
     if lookup("x") != 3:
@@ -754,20 +757,20 @@ def test_begin_end():
 
 
 def test_psdef():
-    opPush("/x")
-    opPush(10)
-    psDef()
+    op_push("/x")
+    op_push(10)
+    ps_def()
     if lookup("x") != 10:
         return False
     return True
 
 
 def test_psdef2():
-    opPush("/x")
-    opPush(10)
-    psDef()
-    opPush(1)
-    psDict()
+    op_push("/x")
+    op_push(10)
+    ps_def()
+    op_push(1)
+    ps_dict()
     begin()
     if lookup("x") != 10:
         end()
@@ -780,14 +783,15 @@ def main_part1():
     test_cases = [('define', test_define), ('lookup', test_lookup), ('add', test_add), ('sub', test_sub),
                  ('mul', test_mul),('div', test_div), ('eq', test_eq), ('lt', test_lt), ('gt', test_gt),
                  ('psAnd', test_ps_and), ('psOr', test_ps_or),
-                 ('psNot', testPsNot),
+                 ('psNot', test_ps_not()),
                  ('length', test_length), ('get', test_get), ('dup', test_dup),
                  ('exch', test_exch), ('pop', test_pop),
                  ('copy', test_copy),
                  ('clear', test_clear), ('dict', test_dict), ('begin', test_begin_end), ('psDef', test_psdef),
                  ('psDef2', test_psdef2)]
     # add you test functions to this list along with suitable names
-    failed_tests = [testName for (testName, test_proc) in test_cases if not test_proc()]
+    failed_tests = [test_name for (test_name, test_proc) in test_cases if not test_proc()]
+
     if failed_tests:
         return 'Some tests failed', failed_tests
     else:
