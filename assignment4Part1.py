@@ -571,32 +571,32 @@ def test_lookup():
 
 # Arithmatic operator tests
 def test_add():
-    opPush(1)
-    opPush(2)
+    op_push(1)
+    op_push(2)
     add()
-    if opPop() != 3:
+    if op_pop() != 3:
         return False
     return True
 
 
 def test_sub():
-    opPush(10)
-    opPush(4.5)
+    op_push(10)
+    op_push(4.5)
     sub()
-    if opPop() != 5.5:
+    if op_pop() != 5.5:
         return False
     return True
 
 
 def test_mul():
-    opPush(2)
-    opPush(4.5)
+    op_push(2)
+    op_push(4.5)
     mul()
-    if opPop() != 9:
+    if op_pop() != 9:
         return False
     return True
 
-
+# THIS IS WHERE YOU LEFT OFF FOR CHANGING FUNCTION NAMES
 def test_div():
     opPush(10)
     opPush(4)
@@ -777,18 +777,19 @@ def test_psdef2():
 
 
 def main_part1():
-    testCases = [('define', test_define), ('lookup', testLookup), ('add', testAdd), ('sub', testSub), ('mul', testMul),
-                 ('div', testDiv), \
-                 ('eq', testEq), ('lt', testLt), ('gt', testGt), ('psAnd', testPsAnd), ('psOr', testPsOr),
-                 ('psNot', testPsNot), \
-                 ('length', testLength), ('get', testGet), ('dup', testDup), ('exch', testExch), ('pop', testPop),
-                 ('copy', testCopy), \
-                 ('clear', testClear), ('dict', testDict), ('begin', testBeginEnd), ('psDef', testpsDef),
-                 ('psDef2', testpsDef2)]
+    test_cases = [('define', test_define), ('lookup', test_lookup), ('add', test_add), ('sub', test_sub),
+                 ('mul', test_mul),('div', test_div), ('eq', test_eq), ('lt', test_lt), ('gt', test_gt),
+                 ('psAnd', test_ps_and), ('psOr', test_ps_or),
+                 ('psNot', testPsNot),
+                 ('length', test_length), ('get', test_get), ('dup', test_dup),
+                 ('exch', test_exch), ('pop', test_pop),
+                 ('copy', test_copy),
+                 ('clear', test_clear), ('dict', test_dict), ('begin', test_begin_end), ('psDef', test_psdef),
+                 ('psDef2', test_psdef2)]
     # add you test functions to this list along with suitable names
-    failedTests = [testName for (testName, testProc) in testCases if not testProc()]
-    if failedTests:
-        return 'Some tests failed', failedTests
+    failed_tests = [testName for (testName, test_proc) in test_cases if not test_proc()]
+    if failed_tests:
+        return 'Some tests failed', failed_tests
     else:
         return 'All part-1 tests OK'
 
