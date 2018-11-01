@@ -64,7 +64,7 @@ if __name__ == "__main__":
            # item = evenNums.__next__()
            # print(item)
            # n -= 1
-
+           
         rStream = streamRandoms(1,1,100)
         myList = []
         for i in range(0,10):
@@ -72,5 +72,7 @@ if __name__ == "__main__":
                 rStream = rStream.rest
         
         print(myList)
+        
+        
 
         
