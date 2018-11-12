@@ -80,8 +80,72 @@ def parse(L):
         elif c == '{':
             res.append(groupMatching2(it))
         else:
-            res.append(c)
+            if isInt(c):
+                res.append(int(c))
+            elif isFloat(c):
+                res.append(float(c))
+            elif isTrue(c):
+                res.append(True)
+            elif isFalse(c):
+                res.append(False)
+            else:
+                res.append(c)
     return res
+
+
+def alterArray(value):
+    for i in range(0, (len(value) - 1)):
+        if isArray(value[i]):
+            value[i] = convertToArray(value[i])
+        else:
+            continue
+
+
+def isArray(value):
+    for i in range(1, (len(value) - 2), 2):
+        if isInt(value[i]):
+            continue
+        else:
+            return False
+
+    return True
+
+
+def convertToArray(value):
+    return_array = []
+    for item in value:
+        if item == '[' or item == ']' or item == ' ':
+            continue
+        else:
+            return_array.append(item)
+
+    return return_array
+
+
+def isInt(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
+
+def isFloat(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
+
+def isTrue(value):
+    if value == 'True':
+        return True
+
+
+def isFalse(value):
+    if value == 'False':
+        return False
 
 
 # Write the necessary code here; again write
@@ -138,5 +202,8 @@ input4 = """
 
 
 if __name__ == '__main__':
-    variable = parse(tokenize(input4))
+    variable = parse(tokenize(input3))
     print(variable)
+    alterArray(variable)
+    print(variable)
+
