@@ -2,7 +2,7 @@
 # Fall 2018 CS 355
 # Assignment 4 part 2
 
-import assignment4Part1
+import assignment4Part1 as assignment1Functions
 import re
 
 
@@ -240,23 +240,35 @@ def isFalse(value):
 
 
 
-
-
-
-
-
-
-# Pretty much go through the code array and whenever you encounter another code array, recursively call this function
+# Pretty much go through the code array and whenever you lookup a code array, recursively call this function
 def interpretSPS(code): # code is a code array
+
+    postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
+    ,'for', 'forall', 'length', 'get', 'dup', 'exch', 'pop', 'copy', 'clear', 'def', 'stack']
+
     for item in code: 
+        if isinstance(item, str):
+            # If the item is a name declaration
+            if item[0] == '/':
+            
+            # If the item is a postscript operation
+            elif item in postscriptOperations: 
+
+            # If the item is a name lookup
+            else: 
+        
+        elif type(item) == list: 
+
+        elif type(item) == int or type(item) == float: 
 
 
 
 
-# Copy this to your HW4_part2.py file>
 def interpreter(s): # s is a string
-    # interpretSPS(parse(tokenize(s)))
-    pass
+    variable = parse(tokenize(s))
+    almostFinalVariable = turnIntArraysToLists(variable)
+    finalVariable = stringsToCorrectTypes(almostFinalVariable)
+    interpretSPS(finalVariable)
 
 
 # testing
@@ -298,9 +310,6 @@ input4 = """
 
 
 if __name__ == '__main__':
-    variable = parse(tokenize(input4))
-    almostFinalVariable = turnIntArraysToLists(variable)
-    finalVariable = stringsToCorrectTypes(almostFinalVariable)
-    print(finalVariable)
+    interpreter(input2)
     
       
