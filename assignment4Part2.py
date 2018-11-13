@@ -73,47 +73,6 @@ def parse(L):
 
 
 
-
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~NOTES FOR MYSELF, FEEL FREE TO IGNORE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Okay, so the above will change the type of every value that's NOT NESTED. Will get rid of all of it
-# and instead provide all functionality within the two functions described below.
-# Understandably this might not be as clean of a process as desired as per assignment specs, but it makes sense to me
-# and appears to be straightforward in implementation
-
-# Note - provided code appears to put every code array into a python list
-# Arrays are the only items that need to be converted into python lists
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# Two things need to be done: 
-
-# Firstly, a most likely recursive function needs to be implemented that turns string number arrays
-# to python lists of numbers. This will require basically visiting every single nested value and if it 
-# is a string representation of an int list, convert it
-
-# Secondly, a similarly recursive function needs to be implemented that goes through every single individual value
-# (especially nested) and converts string ints, floats, bools, to their proper type
-
-# For the first function: for each item in tokenized list, if the item is an int array, convert to a python list. 
-# If the item is a code array, then recursively call the function again with code array as the passed-in value
-# Returns once it reaches the end of a given sublist .
-
-# For the second function: for each item in tokenized list, if the item is a string representation of an int, float, bool
-# then convert to the proper python type. If the item is a list of any sort (code array, numerical array), then 
-# recursively call upon this function again and pass in the list as the parameter. Returns once it reaches the end
-# of a given sublist. 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
-
-
-
-
 # This function goes through every single value in the tokenized list, 
 # and if it encounters a string representation of an array, then it calls the proper functions 
 # to convert it to a python string list
@@ -244,13 +203,54 @@ def isFalse(value):
 
 
 
-# Write the necessary code here; again write
-# auxiliary functions if you need them. This will probably be the largest
-# function of the whole project, but it will have a very regular and obvious
-# structure if you've followed the plan of the assignment.
-#
+# Some notes: 
+
+# Each value will either be a string, an integer/float, a list (code array or integer array)
+#  
+# If it is an int/float, I believe it is guaranteed that it will be pushed to the operand stack 
+
+# If it is a string, it will either be an operation call, a variable lookup, or a name definition (/x)
+# In order to discern which is which, firstly check if the first character in the string is '/' in which case
+# you can guarantee that it is a name declaration (push to the operand stack)
+# Then, if first character is not '/', then it is one of two other things (variable lookup or operation call)
+# You can keep a list of string representations of all operations. First, check if the string exists in this list
+# and if it does, then call the corresponding operation
+# If it does not exist within this list, then it can pretty much be guaranteed that the string is a name lookup
+
+# If it is a list, it will either be a code array or a number (I believe always integer) array
+# Regardless, they will be pushed to the operand stack upon encountering them
+# The only time that you will need to discern the difference is when you do a lookup of a given name and it returns
+# a list. If it is a code array, then you will need to execute the code array, otherwise I'm pretty sure you just display the array
+# So there can be an auxillary function for this that just checks if every value within the list is an integer, and if not, it is code array 
+
+# NEEDS MORE THOUGHT
+# In the case of a for loop, I would create an auxillary function that is a for loop 
+# and does the necessary things in regard to the operand stack and executing the code array??
+# The forall loop takes an integer array and a procedure, and applies said procedure to every item within 
+# the array 
+
+# If and ifelse operators work as follows: 
+
+# In the case of 'if', you pop two values from the stack which should be a bool object
+# obtained through some sort of operation most likely, and a code array. 
+# If the boolean value is true, then you go ahead and execute the code array (recursively calling the interpret function)
+
+# In the case of 'ifelse', you pop the boolean value, and if it is true, then you execute the first code array
+# (next thing on the operand stack), and if it is false, then you execute the second code array 
+
+
+
+
+
+
+
+
+
+# Pretty much go through the code array and whenever you encounter another code array, recursively call this function
 def interpretSPS(code): # code is a code array
-    pass
+    for item in code: 
+
+
 
 
 # Copy this to your HW4_part2.py file>
