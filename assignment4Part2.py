@@ -42,24 +42,13 @@ def group(s):
             res.append(groupMatching(it))
     return res
 
-# group("{{}{{}}}")
 
-
-# The it argument is an iterator.
-# The sequence of return characters should represent a list of properly nested
-# tokens, where the tokens between '{' and '}' is included as a sublist. If the
-# parentheses in the input iterator is not properly nested, returns False.
 def groupMatching2(it):
     res = []
     for c in it:
         if c == '}':
             return res
         elif c == '{':
-            # Note how we use a recursive call to group the tokens inside the
-            # inner matching parenthesis.
-            # Once the recursive call returns the code array for the inner
-            # parentheses, it will be appended to the list we are constructing
-            # as a whole.
             res.append(groupMatching2(it))
         else:
             res.append(c)
@@ -83,6 +72,12 @@ def parse(L):
     return res
 
 
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~NOTES FOR MYSELF, FEEL FREE TO IGNORE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Okay, so the above will change the type of every value that's NOT NESTED. Will get rid of all of it
 # and instead provide all functionality within the two functions described below.
 # Understandably this might not be as clean of a process as desired as per assignment specs, but it makes sense to me
@@ -110,6 +105,11 @@ def parse(L):
 # then convert to the proper python type. If the item is a list of any sort (code array, numerical array), then 
 # recursively call upon this function again and pass in the list as the parameter. Returns once it reaches the end
 # of a given sublist. 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
 
 
 
@@ -171,6 +171,7 @@ def stringsToCorrectTypes(tokenList):
 # Returns True if it is, False otherwise
 def isArray(value):
 
+    # If the value you encounter is not a string, then it is not a string representation of an array, so return false
     if not isinstance(value, str):
         return False
     else: 
@@ -239,6 +240,8 @@ def isTrue(value):
 def isFalse(value):
     if value == 'false':
         return False
+
+
 
 
 # Write the necessary code here; again write
