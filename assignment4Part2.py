@@ -66,7 +66,6 @@ def groupMatching2(it):
     return False
 
 
-# RENAME THIS FUNCTION AS parse
 # Function to parse a list of tokens and arrange the tokens between { and } braces
 # as code-arrays.
 # Properly nested parentheses are arranged into a list of properly nested lists.
@@ -80,16 +79,7 @@ def parse(L):
         elif c == '{':
             res.append(groupMatching2(it))
         else:
-            if isInt(c):
-                res.append(int(c))
-            elif isFloat(c):
-                res.append(float(c))
-            elif isTrue(c):
-                res.append(True)
-            elif isFalse(c):
-                res.append(False)
-            else:
-                res.append(c)
+            res.append(c)
     return res
 
 
@@ -122,35 +112,109 @@ def parse(L):
 # of a given sublist. 
 
 
-def alterArray(value):
-    for i in range(0, (len(value) - 1)):
-        if isArray(value[i]):
-            value[i] = convertToArray(value[i])
-        else:
-            continue
 
 
+# This function goes through every single value in the tokenized list, 
+# and if it encounters a string representation of an array, then it calls the proper functions 
+# to convert it to a python string list
+# 'stringsToCorrectTypes' function will later turn these strings into python integers
+def turnIntArraysToLists(tokenList):
+    newArray = []
+    for value in tokenList: 
+        newArray.append(value)
+
+    for i in range(0, len(newArray)): 
+        # If you don't encounter a python list
+        if type(newArray[i]) != list: 
+            #If you encounter a string representation of an integer array, then turn it into a python list 
+            # by calling convertToArray function
+            if isArray(newArray[i]): 
+                newArray[i] = convertToArray(newArray[i])
+            else: 
+                continue
+        # However if you do encounter a code array, call this function again
+        # The sole point of this function is turning all string representations of integer arrays ('[1 2 3]')
+        # to python lists ([1,2,3]) 
+        else: 
+            newArray[i] = turnIntArraysToLists(newArray[i])
+    
+    return newArray
+
+
+# This function goes through every single item in every sublist and converts it to its proper python type
+# if the item is a float, int, or bool 
+def stringsToCorrectTypes(tokenList): 
+
+    returnArray = []
+    for value in tokenList: 
+        returnArray.append(value)
+    
+    for i in range(0, len(returnArray)): 
+        if type(returnArray[i]) != list: 
+            if isInt(returnArray[i]):
+                returnArray[i] = int(returnArray[i])
+            elif isFloat(returnArray[i]):
+                returnArray[i] = float(returnArray[i])
+            elif isTrue(returnArray[i]):
+                returnArray[i] = True
+            elif isFalse(returnArray[i]):
+                returnArray[i] = False
+        # If you do encounter a list (either int array or code array), then recursively go through that sublist
+        # by again calling this function
+        else: 
+            returnArray[i] = stringsToCorrectTypes(returnArray[i])
+    
+    return returnArray
+
+        
+# This function checks if a given string is an array ('[1 2 3]')
+# Returns True if it is, False otherwise
 def isArray(value):
-    for i in range(1, (len(value) - 2), 2):
-        if isInt(value[i]):
-            continue
-        else:
+
+    if not isinstance(value, str):
+        return False
+    else: 
+        if len(value) < 3:
             return False
+        else: 
+            # Increments by 2 starting from the second value, checking if each value is an integer
+            # If it encounters a non-integer value, then it returns false
+            for i in range(1, (len(value) - 1), 2):
+                if isInt(value[i]):
+                    continue
+                else:
+                    return False
 
-    return True
+            return True
 
 
+# This function is called from 'turnIntArraysToLists' function and does the actual conversion from 
+# string representation of an array to a python list of strings ('[1 2 3]' ==>  ['1', '2', '3'])
 def convertToArray(value):
-    return_array = []
-    for item in value:
-        if item == '[' or item == ']' or item == ' ':
-            continue
+    returnArray = []
+    tempDoubleDigit = ''
+    i = 0
+    while(i < (len(value))):
+        if value[i] == '[' or value[i] == ']':
+            i += 1
+        elif value[i] == ' ':
+            i += 1
+            while (True):
+                if value[i] == ' ' or value[i] == ']':
+                    break
+                else: 
+                    tempDoubleDigit += value[i]
+                    i += 1
+            returnArray.append(tempDoubleDigit)
+            tempDoubleDigit = ''
         else:
-            return_array.append(item)
+            returnArray.append(value[i])
+            i += 1
 
-    return return_array
+    return returnArray
 
 
+# Checks if a string value is representative of an integer
 def isInt(value):
     try:
         int(value)
@@ -158,7 +222,7 @@ def isInt(value):
     except ValueError:
         return False
 
-
+# Checks if a string value is representative of a floating point value
 def isFloat(value):
     try:
         float(value)
@@ -166,14 +230,14 @@ def isFloat(value):
     except ValueError:
         return False
 
-
+# Checks if string value is representative of the boolean value 'True'
 def isTrue(value):
-    if value == 'True':
+    if value == 'true':
         return True
 
-
+# Checks if string value is representative of the boolean value 'False'
 def isFalse(value):
-    if value == 'False':
+    if value == 'false':
         return False
 
 
@@ -231,5 +295,9 @@ input4 = """
 
 
 if __name__ == '__main__':
-    variable = parse(tokenize(input2))
-    print(variable)
+    variable = parse(tokenize(input4))
+    almostFinalVariable = turnIntArraysToLists(variable)
+    finalVariable = stringsToCorrectTypes(almostFinalVariable)
+    print(finalVariable)
+    
+    
