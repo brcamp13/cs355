@@ -239,7 +239,7 @@ def isTrue(value):
 # Checks if string value is representative of the boolean value 'False'
 def isFalse(value):
     if value == 'false':
-        return False
+        return True
 
 
 
@@ -303,4 +303,4 @@ if __name__ == '__main__':
     finalVariable = stringsToCorrectTypes(almostFinalVariable)
     print(finalVariable)
     
-    
+      
