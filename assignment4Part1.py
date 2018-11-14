@@ -566,9 +566,16 @@ def ps_def():
 # The assignment says that the '/' should remain when implementing define
 # So the given test function is incorrect on the basis of that
 
-def test_define():
+def test_define1():
     define("/n1", 4)
     if lookup("/n1") != 4:
+        return False
+    return True
+
+def test_define2():
+    define("/n1", 4)
+    define("/n1", 5.0)
+    if lookup("/n1") != 5.0:
         return False
     return True
 
@@ -640,8 +647,8 @@ def test_lt():
 
 
 def test_gt():
-    op_push(3)
-    op_push(6)
+    op_push(4)
+    op_push(5)
     gt()
     if op_pop() is False:
         return False
@@ -789,15 +796,27 @@ def test_psdef2():
     end()
     return True
 
+def test_div_inputs(): 
+    op_push("/x")
+    op_push(10)
+    div()
+    print(op_stack)
+    if op_stack == ["/x", 10]:
+        return True
+    else: 
+        return False
+
+
 
 def main_part1():
 
-    test_cases = [('define', test_define()), ('lookup', test_lookup()), ('add', test_add()),
+    test_cases = [('define1', test_define1()), ('define2', test_define2()), ('lookup', test_lookup()), ('add', test_add()),
                   ('sub', test_sub()), ('mul', test_mul()),('div', test_div()), ('eq', test_eq()),
                   ('lt', test_lt()), ('gt', test_gt()), ('psAnd', test_ps_and()), ('psOr', test_ps_or()),
                   ('psNot', test_ps_not()), ('length', test_length()), ('get', test_get()), ('dup', test_dup()),
                   ('exch', test_exch()), ('pop', test_pop()), ('copy', test_copy()), ('clear', test_clear()),
-                  ('dict', test_dict()), ('begin', test_begin_end()), ('psDef', test_psdef()), ('psDef2', test_psdef2())]
+                  ('dict', test_dict()), ('begin', test_begin_end()), ('psDef', test_psdef()), ('psDef2', test_psdef2()), 
+                  ('divInputs', test_div_inputs())]
 
     failed_tests = [test_name for (test_name, test_proc) in test_cases if test_proc is False]
 
