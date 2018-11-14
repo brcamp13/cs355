@@ -399,6 +399,12 @@ def testAllInputs():
 
     print('Input 4 test:')
     interpreter(input4)
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('My first test input:')
+    interpreter(myTestInput1)
     assignment1Functions.op_stack[:] = []
     assignment1Functions.dict_stack[:] = []
 
@@ -440,6 +446,12 @@ input4 = """
   eq stack 
 """
 
+myTestInput1 = """
+  [1 2 3 4 5] dup length exch {dup add}  forall
+  add add add add
+  exch 0 exch -1 1 {dup add add} for
+  eq stack 
+"""
 
 if __name__ == '__main__':
     testAllInputs() 
