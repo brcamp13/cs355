@@ -254,7 +254,8 @@ def psForAll():
 
 
 # Pretty much go through the code array and whenever you lookup a code array, recursively call this function
-def interpretSPS(code): # code is a code array
+# I'm sure there is a better way to clean this up, but this will stay for now
+def interpretSPS(code): 
 
     postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
     ,'for', 'forall', 'length', 'get', 'dup', 'exch', 'pop', 'copy', 'clear', 'def', 'stack', 'dict', 'begin', 'end']
@@ -366,13 +367,40 @@ def interpretSPS(code): # code is a code array
 
 def interpreter(s): # s is a string
 
-    # All inputs work except for input 2
-    # Time to debug...
-
+    # Turn input into python list of strings, all code arrays are python lists
     variable = parse(tokenize(s))
+    # Turns every integer array into a python list of characters ('[1 2 3]' ==> ['1', '2', '3'])
     almostFinalVariable = turnIntArraysToLists(variable)
+    # Converts every value into its proper type (int, float, bool). This will be the final input that will be interpreted 
     finalVariable = stringsToCorrectTypes(almostFinalVariable)
+    # Interpret this input by calling the 'interpreterSPS' function
     interpretSPS(finalVariable)
+
+
+def testAllInputs():
+
+    print('Input 1 test:')
+    interpreter(input1)
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 2 test:')
+    interpreter(input2)
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 3 test:')
+    interpreter(input3)
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 4 test:')
+    interpreter(input4)
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
 
 
 # testing
@@ -414,26 +442,7 @@ input4 = """
 
 
 if __name__ == '__main__':
-
-    print('Input 1 test:')
-    interpreter(input1)
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    print('Input 2 test:')
-    interpreter(input2)
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    print('Input 3 test:')
-    interpreter(input3)
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    print('Input 4 test:')
-    interpreter(input4)
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
+    testAllInputs() 
 
     
       
