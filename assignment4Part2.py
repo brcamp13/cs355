@@ -201,55 +201,46 @@ def isFalse(value):
         return True
 
 
-
-
-# Some notes: 
-
-# Each value will either be a string, an integer/float, a list (code array or integer array)
-#  
-# If it is an int/float, I believe it is guaranteed that it will be pushed to the operand stack 
-
-# If it is a string, it will either be an operation call, a variable lookup, or a name definition (/x)
-# In order to discern which is which, firstly check if the first character in the string is '/' in which case
-# you can guarantee that it is a name declaration (push to the operand stack)
-# Then, if first character is not '/', then it is one of two other things (variable lookup or operation call)
-# You can keep a list of string representations of all operations. First, check if the string exists in this list
-# and if it does, then call the corresponding operation
-# If it does not exist within this list, then it can pretty much be guaranteed that the string is a name lookup
-
-# If it is a list, it will either be a code array or a number (I believe always integer) array
-# Regardless, they will be pushed to the operand stack upon encountering them
-# The only time that you will need to discern the difference is when you do a lookup of a given name and it returns
-# a list. If it is a code array, then you will need to execute the code array, otherwise I'm pretty sure you just display the array
-# So there can be an auxillary function for this that just checks if every value within the list is an integer, and if not, it is code array 
-
-# NEEDS MORE THOUGHT
-# In the case of a for loop, I would create an auxillary function that is a for loop 
-# and does the necessary things in regard to the operand stack and executing the code array??
-# The forall loop takes an integer array and a procedure, and applies said procedure to every item within 
-# the array 
-
-# If and ifelse operators work as follows: 
-
-# In the case of 'if', you pop two values from the stack which should be a bool object
-# obtained through some sort of operation most likely, and a code array. 
-# If the boolean value is true, then you go ahead and execute the code array (recursively calling the interpret function)
-
-# In the case of 'ifelse', you pop the boolean value, and if it is true, then you execute the first code array
-# (next thing on the operand stack), and if it is false, then you execute the second code array 
-
 def psIf():
-    pass
+    codeArray = assignment1Functions.op_pop()
+    boolValue = assignment1Functions.op_pop()
+    if boolValue == True: 
+        interpretSPS(codeArray)
+    
 
 
 def psIfelse(): 
-    pass
+
+    codeArray2 = assignment1Functions.op_pop()
+    codeArray1 = assignment1Functions.op_pop()
+    boolValue = assignment1Functions.op_pop()
+
+    if boolValue == True: 
+        interpretSPS(codeArray1)
+    else: 
+        interpretSPS(codeArray2)
 
 def psFor(): 
-    pass
+
+    initialValue = assignment1Functions.op_pop()
+    incrementValue = assignment1Functions.op_pop()
+    finalValue = assignment1Functions.op_pop()
+    codeArray = assignment1Functions.op_pop()
+
+    while(initialValue <= finalValue): 
+        assignment1Functions.op_push(initialValue)
+        interpretSPS(codeArray)
+        initialValue += incrementValue
+
+    
 
 def psForAll():
-    pass
+    procedure = assignment1Functions.op_pop()
+    intArray = assignment1Functions.op_pop()
+    for item in intArray: 
+        assignment1Functions.op_push(item)
+        interpretSPS(procedure) 
+        
 
 
 
@@ -288,18 +279,22 @@ def interpretSPS(code): # code is a code array
                     assignment1Functions.ps_or()
                 elif item == 'not':
                     assignment1Functions.ps_not() 
-                
                 # Recursive
                 elif item == 'if': 
-                
+                    psIf()
+                    continue
                 # Recursive
                 elif item == 'ifelse': 
-                
+                    psIfElse()
+                    continue
                 # Recursive
                 elif item == 'for':
-
+                    psFor()
+                    continue
                 # Recursive 
                 elif item == 'forall': 
+                    psForAll()
+                    continue
 
                 elif item == 'length':
                     assignment1Functions.length() 
@@ -321,8 +316,17 @@ def interpretSPS(code): # code is a code array
                     assignment1Functions.stack() 
 
             # If the item is a name lookup
-            # Potentially recursive (if lookup yields a code array)
-            else: 
+            # If lookup yields a code array, then execute that code array. 
+            # Otherwise, I don't believe you do anything unless she wants the value to be printed
+            else:
+                value = assignment1Functions.lookup(item)
+                if type(value) == list: 
+                    if all(isinstance(x, int) for x in value):
+                        interpretSPS(value)
+                    else: 
+                        continue
+                else: 
+                    continue
         
         elif type(item) == list: 
             assignment1Functions.op_push(item)
@@ -332,10 +336,16 @@ def interpretSPS(code): # code is a code array
             assignment1Functions.op_push(item)
             continue
 
+    return
+
 
 
 
 def interpreter(s): # s is a string
+
+    # Input 3 works, but not 1 or 2 or 4
+    # Time to debug...
+
     variable = parse(tokenize(s))
     almostFinalVariable = turnIntArraysToLists(variable)
     finalVariable = stringsToCorrectTypes(almostFinalVariable)
@@ -381,6 +391,6 @@ input4 = """
 
 
 if __name__ == '__main__':
-    interpreter(input2)
+    interpreter(input3)
     
       
