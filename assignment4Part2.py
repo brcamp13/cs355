@@ -200,7 +200,7 @@ def isFalse(value):
     if value == 'false':
         return True
 
-
+# Implementation of the 'if' operator
 def psIf():
     codeArray = assignment1Functions.op_pop()
     boolValue = assignment1Functions.op_pop()
@@ -208,7 +208,7 @@ def psIf():
         interpretSPS(codeArray)
     
 
-
+# Implementation of the 'ifelse' operator
 def psIfElse():
 
     codeArray2 = assignment1Functions.op_pop()
@@ -220,6 +220,8 @@ def psIfElse():
     elif boolValue == False:
         interpretSPS(codeArray2)
 
+# Implementation of the 'for' operator
+# Has different implementations for a decrementer or incrementer
 def psFor():
 
     codeArray = assignment1Functions.op_pop()
@@ -240,7 +242,7 @@ def psFor():
             initialValue += incrementValue
 
     
-
+# Implementation of the 'forall' postscript operator
 def psForAll():
     procedure = assignment1Functions.op_pop()
     intArray = assignment1Functions.op_pop()
@@ -264,7 +266,7 @@ def interpretSPS(code): # code is a code array
                 assignment1Functions.op_push(item)
                 continue
             
-            # If the item is a postscript operation
+            # If the item is a postscript operation, call correct function
             elif item in postscriptOperations:
                 if item == 'add':
                     assignment1Functions.add() 
@@ -330,7 +332,7 @@ def interpretSPS(code): # code is a code array
 
             # If the item is a name lookup
             # If lookup yields a code array, then execute that code array. 
-            # Otherwise, I don't believe you do anything unless she wants the value to be printed
+            # Otherwise, push the value to the operand stack 
             else:
                 value = assignment1Functions.lookup(item)
                 if type(value) == list: 
@@ -342,14 +344,17 @@ def interpretSPS(code): # code is a code array
                 else: 
                     assignment1Functions.op_push(value)
         
+        # If the item is a list (int array or code array), then push to op stack
         elif type(item) == list: 
             assignment1Functions.op_push(item)
             continue
 
+        # If the item is an integer or floating point value, then push to op stack 
         elif type(item) == int or type(item) == float: 
             assignment1Functions.op_push(item)
             continue
 
+        # If the item is a boolean value, then push to op stack 
         elif type(item) == bool:
             assignment1Functions.op_push(item)
             continue
@@ -409,6 +414,26 @@ input4 = """
 
 
 if __name__ == '__main__':
+
+    print('Input 1 test:')
     interpreter(input1)
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 2 test:')
+    interpreter(input2)
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 3 test:')
+    interpreter(input3)
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 4 test:')
+    interpreter(input4)
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
     
       
