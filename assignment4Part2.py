@@ -238,6 +238,19 @@ def isFalse(value):
 # In the case of 'ifelse', you pop the boolean value, and if it is true, then you execute the first code array
 # (next thing on the operand stack), and if it is false, then you execute the second code array 
 
+def psIf():
+    pass
+
+
+def psIfelse(): 
+    pass
+
+def psFor(): 
+    pass
+
+def psForAll():
+    pass
+
 
 
 # Pretty much go through the code array and whenever you lookup a code array, recursively call this function
@@ -250,16 +263,74 @@ def interpretSPS(code): # code is a code array
         if isinstance(item, str):
             # If the item is a name declaration
             if item[0] == '/':
+                assignment1Functions.op_push(item)
+                continue
             
             # If the item is a postscript operation
-            elif item in postscriptOperations: 
+            elif item in postscriptOperations:
+                if item == 'add':
+                    assignment1Functions.add() 
+                elif item == 'sub': 
+                    assignment1Functions.sub()
+                elif item == 'mul': 
+                    assignment1Functions.mul()
+                elif item == 'div': 
+                    assignment1Functions.div()
+                elif item == 'eq':
+                    assignment1Functions.eq() 
+                elif item == 'lt':
+                    assignment1Functions.lt() 
+                elif item == 'gt': 
+                    assignment1Functions.gt()
+                elif item == 'and': 
+                    assignment1Functions.ps_and()
+                elif item == 'or': 
+                    assignment1Functions.ps_or()
+                elif item == 'not':
+                    assignment1Functions.ps_not() 
+                
+                # Recursive
+                elif item == 'if': 
+                
+                # Recursive
+                elif item == 'ifelse': 
+                
+                # Recursive
+                elif item == 'for':
+
+                # Recursive 
+                elif item == 'forall': 
+
+                elif item == 'length':
+                    assignment1Functions.length() 
+                elif item == 'get':
+                    assignment1Functions.get() 
+                elif item == 'dup': 
+                    assignment1Functions.dup()
+                elif item == 'exch':
+                    assignment1Functions.exch() 
+                elif item == 'pop':
+                    assignment1Functions.pop() 
+                elif item == 'copy':
+                    assignment1Functions.copy() 
+                elif item == 'clear':
+                    assignment1Functions.clear() 
+                elif item == 'def': 
+                    assignment1Functions.ps_def()
+                elif item == 'stack':
+                    assignment1Functions.stack() 
 
             # If the item is a name lookup
+            # Potentially recursive (if lookup yields a code array)
             else: 
         
         elif type(item) == list: 
+            assignment1Functions.op_push(item)
+            continue
 
         elif type(item) == int or type(item) == float: 
+            assignment1Functions.op_push(item)
+            continue
 
 
 
