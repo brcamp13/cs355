@@ -209,7 +209,7 @@ def psIf():
     
 
 
-def psIfelse(): 
+def psIfElse():
 
     codeArray2 = assignment1Functions.op_pop()
     codeArray1 = assignment1Functions.op_pop()
@@ -217,20 +217,27 @@ def psIfelse():
 
     if boolValue == True: 
         interpretSPS(codeArray1)
-    else: 
+    elif boolValue == False:
         interpretSPS(codeArray2)
 
-def psFor(): 
+def psFor():
 
-    initialValue = assignment1Functions.op_pop()
-    incrementValue = assignment1Functions.op_pop()
-    finalValue = assignment1Functions.op_pop()
     codeArray = assignment1Functions.op_pop()
+    finalValue = assignment1Functions.op_pop()
+    incrementValue = assignment1Functions.op_pop()
+    initialValue = assignment1Functions.op_pop()
 
-    while(initialValue <= finalValue): 
-        assignment1Functions.op_push(initialValue)
-        interpretSPS(codeArray)
-        initialValue += incrementValue
+    if incrementValue < 0:
+        while(initialValue >= finalValue):
+            assignment1Functions.op_push(initialValue)
+            interpretSPS(codeArray)
+            initialValue += incrementValue
+
+    elif incrementValue > 0:
+        while (initialValue <= finalValue):
+            assignment1Functions.op_push(initialValue)
+            interpretSPS(codeArray)
+            initialValue += incrementValue
 
     
 
@@ -248,7 +255,7 @@ def psForAll():
 def interpretSPS(code): # code is a code array
 
     postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
-    ,'for', 'forall', 'length', 'get', 'dup', 'exch', 'pop', 'copy', 'clear', 'def', 'stack']
+    ,'for', 'forall', 'length', 'get', 'dup', 'exch', 'pop', 'copy', 'clear', 'def', 'stack', 'dict', 'begin', 'end']
 
     for item in code: 
         if isinstance(item, str):
@@ -313,7 +320,13 @@ def interpretSPS(code): # code is a code array
                 elif item == 'def': 
                     assignment1Functions.ps_def()
                 elif item == 'stack':
-                    assignment1Functions.stack() 
+                    assignment1Functions.stack()
+                elif item == 'dict':
+                    assignment1Functions.ps_dict()
+                elif item == 'begin':
+                    assignment1Functions.begin()
+                elif item == 'end':
+                    assignment1Functions.end()
 
             # If the item is a name lookup
             # If lookup yields a code array, then execute that code array. 
@@ -322,17 +335,22 @@ def interpretSPS(code): # code is a code array
                 value = assignment1Functions.lookup(item)
                 if type(value) == list: 
                     if all(isinstance(x, int) for x in value):
+                        assignment1Functions.op_push(value)
+                    else:
                         interpretSPS(value)
-                    else: 
-                        continue
+
                 else: 
-                    continue
+                    assignment1Functions.op_push(value)
         
         elif type(item) == list: 
             assignment1Functions.op_push(item)
             continue
 
         elif type(item) == int or type(item) == float: 
+            assignment1Functions.op_push(item)
+            continue
+
+        elif type(item) == bool:
             assignment1Functions.op_push(item)
             continue
 
@@ -343,7 +361,7 @@ def interpretSPS(code): # code is a code array
 
 def interpreter(s): # s is a string
 
-    # Input 3 works, but not 1 or 2 or 4
+    # All inputs work except for input 2
     # Time to debug...
 
     variable = parse(tokenize(s))
@@ -391,6 +409,6 @@ input4 = """
 
 
 if __name__ == '__main__':
-    interpreter(input3)
+    interpreter(input1)
     
       

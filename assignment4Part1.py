@@ -501,6 +501,7 @@ def ps_dict():
 
     if len(op_stack) > 0:
 
+        op_pop()
         new_dict = {}
         op_push(new_dict)
 
