@@ -5,7 +5,7 @@
 import assignment4Part1 as assignment1Functions
 import re
 
-
+# ~~~~~~~~~~~~PARSING~~~~~~~~~~~~
 def tokenize(s):
     return re.findall("/?[a-zA-Z][a-zA-Z0-9_]*|[[][a-zA-Z0-9_\s!][a-zA-Z0-9_\s!]*[]]|[-]?[0-9]+|[}{]+|%.*|[^ \t\n]", s)
 
@@ -100,54 +100,6 @@ def turnIntArraysToLists(tokenList):
     return newArray
 
 
-# This function goes through every single item in every sublist and converts it to its proper python type
-# if the item is a float, int, or bool 
-def stringsToCorrectTypes(tokenList): 
-
-    returnArray = []
-    for value in tokenList: 
-        returnArray.append(value)
-    
-    for i in range(0, len(returnArray)): 
-        if type(returnArray[i]) != list: 
-            if isInt(returnArray[i]):
-                returnArray[i] = int(returnArray[i])
-            elif isFloat(returnArray[i]):
-                returnArray[i] = float(returnArray[i])
-            elif isTrue(returnArray[i]):
-                returnArray[i] = True
-            elif isFalse(returnArray[i]):
-                returnArray[i] = False
-        # If you do encounter a list (either int array or code array), then recursively go through that sublist
-        # by again calling this function
-        else: 
-            returnArray[i] = stringsToCorrectTypes(returnArray[i])
-    
-    return returnArray
-
-        
-# This function checks if a given string is an array ('[1 2 3]')
-# Returns True if it is, False otherwise
-def isArray(value):
-
-    # If the value you encounter is not a string, then it is not a string representation of an array, so return false
-    if not isinstance(value, str):
-        return False
-    else: 
-        if len(value) < 3:
-            return False
-        else: 
-            # Increments by 2 starting from the second value, checking if each value is an integer
-            # If it encounters a non-integer value, then it returns false
-            for i in range(1, (len(value) - 1), 2):
-                if isInt(value[i]):
-                    continue
-                else:
-                    return False
-
-            return True
-
-
 # This function is called from 'turnIntArraysToLists' function and does the actual conversion from 
 # string representation of an array to a python list of strings ('[1 2 3]' ==>  ['1', '2', '3'])
 def convertToArray(value):
@@ -174,6 +126,60 @@ def convertToArray(value):
     return returnArray
 
 
+
+# This function goes through every single item in every sublist and converts it to its proper python type
+# if the item is a float, int, or bool 
+def stringsToCorrectTypes(tokenList): 
+
+    returnArray = []
+    for value in tokenList: 
+        returnArray.append(value)
+    
+    for i in range(0, len(returnArray)): 
+        if type(returnArray[i]) != list: 
+            if isInt(returnArray[i]):
+                returnArray[i] = int(returnArray[i])
+            elif isFloat(returnArray[i]):
+                returnArray[i] = float(returnArray[i])
+            elif isTrue(returnArray[i]):
+                returnArray[i] = True
+            elif isFalse(returnArray[i]):
+                returnArray[i] = False
+        # If you do encounter a list (either int array or code array), then recursively go through that sublist
+        # by again calling this function
+        else: 
+            returnArray[i] = stringsToCorrectTypes(returnArray[i])
+    
+    return returnArray
+
+
+# ~~~~~~~~~~~~~~~~~~~END OF PARSING FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        
+# This function checks if a given string is an array ('[1 2 3]')
+# Returns True if it is, False otherwise
+def isArray(value):
+
+    # If the value you encounter is not a string, then it is not a string representation of an array, so return false
+    if not isinstance(value, str):
+        return False
+    else: 
+        if len(value) < 3:
+            return False
+        else: 
+            # Increments by 2 starting from the second value, checking if each value is an integer
+            # If it encounters a non-integer value, then it returns false
+            for i in range(1, (len(value) - 1), 2):
+                if isInt(value[i]):
+                    continue
+                else:
+                    return False
+
+            return True
+
+
+
+# ~~~~~~~~~~~~~~TYPE CHECKING~~~~~~~~~~~~~~~~~~~
 # Checks if a string value is representative of an integer
 def isInt(value):
     try:
@@ -200,6 +206,12 @@ def isFalse(value):
     if value == 'false':
         return True
 
+# ~~~~~~~~~~~~~END OF TYPE CHECKING~~~~~~~~~~~~~~~~~
+
+
+
+
+# ~~~~~~~~~~~~~OPERATOR FUNCTIONS NOT FOUND IN ASSIGNMENT 4 PART 1 ~~~~~~~~~~~~~~~~~~
 # Implementation of the 'if' operator
 def psIf():
     codeArray = assignment1Functions.op_pop()
@@ -248,16 +260,61 @@ def psForAll():
     intArray = assignment1Functions.op_pop()
     for item in intArray: 
         assignment1Functions.op_push(item)
-        interpretSPS(procedure) 
+        interpretSPS(procedure)
+
+def newDef(name, value):
+
+    dict_to_push = {name: value}
+    assignment1Functions.dict_stack[-1][0].update(dict_to_push)
+
+
+def newDynamicLookup():
+    pass
+
+
+def newStaticLookup():
+    pass
+
+
+def findStaticLink():
+    pass
+
+def newStack():
+
+    counter = len(assignment1Functions.dict_stack) - 1
+
+    print('============')
+
+    for item in list(assignment1Functions.op_stack):
+        print(item) 
+
+    print('============')
+
+    while counter >= 0:
+        # Print index and static link
+        print('----' + str(counter) + '----' + str(assignment1Functions.dict_stack[counter][1]) + '----')
+
+        # Print value of dictionary in tuple from every entry in dictStack
+        tupleDictionary = assignment1Functions.dict_stack[counter][0]
+        
+        for key, value in tupleDictionary.items(): 
+            print('/' + str(key) + '  ' + str(value))
+        
+        counter -= 1
+
+
+# ~~~~~~~~~~END OF OPERATOR FUNCTIONS~~~~~~~~~~~~~~
+
+    
         
 
 
 # Checklist of what needs to be done for assignment 5: 
-# For dynamic scoping, nothing changes
-# For statit scoping: 
-    # Dictionary stack needs to be comprised of tuples with (stuff from scope, static link):
-    # Initially populate dict stack with ({}, 0)
-    # Go through given scope. When you encounter 'def', you will need to adjust 'def' function so that it inserts into first value in tuple vs. just dict like before
+# For dynamic scoping, nothing changes, except you use tuples 
+# For static scoping: 
+    #DONE Dictionary stack needs to be comprised of tuples with (stuff from scope, static link):
+    #DONE Initially populate dict stack with ({}, 0)
+    #DONE Go through given scope. When you encounter 'def', you will need to adjust 'def' function so that it inserts into first value in tuple vs. just dict like before
     # When you encounter a lookup situation, you will first check if the value exists in the dictionary of the current scope. 
         # and if it doesn't exist there, follow the activation record of the current scope and check the corresponding dictionary there
     # When you encounter a function call (a lookup that yields a code array) you will firstly need to perform the lookup and obtain the code array
@@ -265,14 +322,15 @@ def psForAll():
     # Then, recursively call the interpreter again
     # Once you finish the function execution, pop the top dictionary from the dict stack
     # Then just continue. 
-    # Also, edit the stack function to print in such a way that the professor specifies (shouldn't be too hard)
+    #DONE Also, edit the stack function to print in such a way that the professor specifies (shouldn't be too hard)
 
 def interpretSPS(code, scope): 
 
     postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
     ,'for', 'forall', 'length', 'get', 'dup', 'exch', 'pop', 'copy', 'clear', 'def', 'stack']
 
-   
+    assignment1Functions.dict_push(({}, 0))
+
     for item in code: 
         if isinstance(item, str):
             # If the item is a name declaration
@@ -484,7 +542,13 @@ myTestInput3 = """
 """
 
 if __name__ == '__main__':
-    testAllInputs() 
-
+    assignment1Functions.op_push(4)
+    assignment1Functions.op_push(5)
+    assignment1Functions.dict_push(({}, 0))
+    assignment1Functions.dict_push(({'a': 4}, 0)) 
+    assignment1Functions.dict_push(({'b': 6, 'c': 32}, 1))
+    newStack()
+    newDef('e', 0)
+    newStack()
     
       
