@@ -286,8 +286,7 @@ def new_ps_def():
 
         # Take the '/' from the name and then add to the dictionary at the top of the dict stack
     else:
-        new_value_2 = value_2[1:]
-        newDef(new_value_2, value_1)
+        newDef(value_2, value_1)
 
 
 # Basically the same lookup function as the previous assignment, but adjusted for a list of tuples rather than dictionaries
@@ -295,7 +294,7 @@ def newDynamicLookup(name):
 
     for item in reversed(assignment1Functions.dict_stack):
         for key, value in item[0].items():
-            if key == name:
+            if key[1:] == name:
                 return value
             else: 
                 continue
@@ -311,7 +310,7 @@ def newStaticLookup(currentTuple, lookupKey):
 
     # Look through the dictionary in the tuple
     for key, value in currentTuple[0].items():
-        if key == lookupKey:
+        if key[1:] == lookupKey:
             # If you find the key, then return the value of that key
             return value
         
@@ -331,7 +330,7 @@ def findStaticLink(currentTuple, lookupKey):
 
     # Look through the dictionary in the tuple
     for key, value in currentTuple[0].items():
-        if key == lookupKey:
+        if key[1:] == lookupKey:
             # If you find the key, then return the index of the tuple in the dict stack
             return assignment1Functions.dict_stack.index(currentTuple)
         else: 
@@ -343,10 +342,11 @@ def findStaticLink(currentTuple, lookupKey):
 
 
 
-def newStack():
+def newStack(scope):
 
     counter = len(assignment1Functions.dict_stack) - 1
 
+    print(scope + ':')
     print('============')
 
     for item in list(reversed(assignment1Functions.op_stack)):
@@ -362,7 +362,7 @@ def newStack():
         tupleDictionary = assignment1Functions.dict_stack[counter][0]
         
         for key, value in tupleDictionary.items(): 
-            print('/' + str(key) + '  ' + str(value))
+            print(str(key) + '  ' + str(value))
         
         counter -= 1
 
@@ -370,24 +370,6 @@ def newStack():
 # ~~~~~~~~~~END OF OPERATOR FUNCTIONS~~~~~~~~~~~~~~
 
     
-        
-
-
-# Checklist of what needs to be done for assignment 5: 
-# For dynamic scoping, nothing changes, except you use tuples 
-# For static scoping: 
-    #DONE Dictionary stack needs to be comprised of tuples with (stuff from scope, static link):
-    #DONE Initially populate dict stack with ({}, 0)
-    #DONE Go through given scope. When you encounter 'def', you will need to adjust 'def' function so that it inserts into first value in tuple vs. just dict like before
-    #DONE When you encounter a lookup situation, you will first check if the value exists in the dictionary of the current scope. 
-        # and if it doesn't exist there, follow the activation record of the current scope and check the corresponding dictionary there
-    #DONE When you encounter a function call (a lookup that yields a code array) you will firstly need to perform the lookup and obtain the code array
-        # Then you must insert an empty tuple dictionary entry to stack. Have a helper function to determine the static link for the function (where it was defined)
-    # Then, recursively call the interpreter again
-    # Once you finish the function execution, pop the top dictionary from the dict stack
-    # Then just continue. 
-    #DONE Also, edit the stack function to print in such a way that the professor specifies (shouldn't be too hard)
-
 def interpretSPS(code, scope): 
 
     postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
@@ -457,7 +439,7 @@ def interpretSPS(code, scope):
                 elif item == 'def': 
                     new_ps_def()
                 elif item == 'stack':
-                    newStack()
+                    newStack(scope)
         
             # If the item is a name lookup
             # If lookup yields a code array, then execute that code array. 
@@ -536,7 +518,34 @@ def interpreter(s, scope): # s is a string
 
 def testAllInputs():
 
-    print('Input 2 test:')
+    print('Input 1 tests:')
+    print('\n')
+    interpreter(input1, 'static')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+    interpreter(input1, 'dynamic')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 2 tests:')
+    print('\n')
+    interpreter(input2, 'static')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+    interpreter(input2, 'dynamic')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 3 tests:')
+    print('\n')
+    interpreter(input3, 'static')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
     interpreter(input3, 'dynamic')
     print('\n')
     assignment1Functions.op_stack[:] = []
@@ -577,32 +586,8 @@ input3 = """
 B
 """
 
-input4 = """
-  [1 2 3 4 5] dup length exch {dup mul}  forall
-  add add add add
-  exch 0 exch -1 1 {dup mul add} for
-  eq stack 
-"""
-
-myTestInput1 = """
-  [1 2 3 4 5] dup length exch {dup add}  forall
-  add add add add
-  exch 0 exch -1 1 {dup add add} for
-  eq stack 
-"""
-
-myTestInput2 = """
-  [1 2 3 4 5 6 7] dup length 3 add 
-  exch length exch add 17
-  eq stack 
-"""
-
-myTestInput3 = """
-  /n 5 def 5 n add stack
-"""
 
 if __name__ == '__main__':
-
    testAllInputs() 
     
       
