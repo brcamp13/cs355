@@ -156,6 +156,9 @@ def stringsToCorrectTypes(tokenList):
 # ~~~~~~~~~~~~~~~~~~~END OF PARSING FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         
+
+# ~~~~~~~~~~~~~~TYPE CHECKING~~~~~~~~~~~~~~~~~~~
+
 # This function checks if a given string is an array ('[1 2 3]')
 # Returns True if it is, False otherwise
 def isArray(value):
@@ -177,9 +180,6 @@ def isArray(value):
 
             return True
 
-
-
-# ~~~~~~~~~~~~~~TYPE CHECKING~~~~~~~~~~~~~~~~~~~
 # Checks if a string value is representative of an integer
 def isInt(value):
     try:
@@ -262,14 +262,15 @@ def psForAll():
         assignment1Functions.op_push(item)
         interpretSPS(procedure)
 
+# Assembles and pushes the new new dictionary to the dictionary stack 
 def newDef(name, value):
 
     dict_to_push = {name: value}
     assignment1Functions.dict_stack[-1][0].update(dict_to_push)
 
+# Pre-function for 'newDef' that checks for correct amount of things in the stack and if the name is of the correct format
 def new_ps_def():
 
-    
     # Check if there are enough values on the operand stack and if values are in the correct format
     if len(assignment1Functions.op_stack) < 2:
         print("There are not enough values on the operand stack to perform the operation")
@@ -322,7 +323,7 @@ def newStaticLookup(currentTuple, lookupKey):
 
 
 
-
+# Function that finds the static link of a given function 
 def findStaticLink(currentTuple, lookupKey):
     
     # This is the static link number
@@ -341,18 +342,18 @@ def findStaticLink(currentTuple, lookupKey):
 
 
 
-
+# Prints the operand and dictionary stack as per the assignment specifications
 def newStack(scope):
 
     counter = len(assignment1Functions.dict_stack) - 1
 
     print(scope + ':')
-    print('============')
+    print('==============')
 
     for item in list(reversed(assignment1Functions.op_stack)):
         print(item) 
 
-    print('============')
+    print('==============')
 
     while counter >= 0:
         # Print index and static link
@@ -361,15 +362,17 @@ def newStack(scope):
         # Print value of dictionary in tuple from every entry in dictStack
         tupleDictionary = assignment1Functions.dict_stack[counter][0]
         
+        # Print each key and value in a given tuple dictionary
         for key, value in tupleDictionary.items(): 
             print(str(key) + '  ' + str(value))
         
         counter -= 1
 
-
 # ~~~~~~~~~~END OF OPERATOR FUNCTIONS~~~~~~~~~~~~~~
 
-    
+#~~~~~~~INTERPRETATION IMPLEMENTATION~~~~~~~~~~
+
+# The actual recursive main function, now implemented with a scope parameter
 def interpretSPS(code, scope): 
 
     postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
@@ -512,8 +515,44 @@ def interpreter(s, scope): # s is a string
     finalVariable = stringsToCorrectTypes(almostFinalVariable)
     # Add empty tuple to dict stack 
     assignment1Functions.dict_push(({}, 0))
-    # Interpret this input by calling the 'interpreterSPS' function
+    # Interpret this input by calling the 'interpreterSPS' function, and the inputted scope
     interpretSPS(finalVariable, scope)
+
+#~~~~~~~~~END OF INTERPRETATION~~~~~~~
+
+
+# ~~~~~~~~~~~~TESTING~~~~~~~~~~~~~~
+input1 = """
+  /x 4 def
+  /g {x stack} def
+  /f {/x 7 def g} def
+  f
+"""
+
+
+input2 = """ 
+/m 50 def 
+/n 100 def
+/egg1 {/m 25 def n} def
+/chic {
+    /n 1 def
+    /egg2 {n} def
+    m n
+    egg1
+    egg2
+    stack} def
+n
+chic  
+"""
+
+
+input3 = """
+/x 10 def
+/A { x } def
+/C { /x 40 def A stack } def
+/B { /x 30 def /A { x } def C } def
+B
+"""
 
 
 def testAllInputs():
@@ -550,42 +589,6 @@ def testAllInputs():
     print('\n')
     assignment1Functions.op_stack[:] = []
     assignment1Functions.dict_stack[:] = []
-
-
-# testing
-
-input1 = """
-  /x 4 def
-  /g {x stack} def
-  /f {/x 7 def g} def
-  f
-"""
-
-
-input2 = """ 
-/m 50 def 
-/n 100 def
-/egg1 {/m 25 def n} def
-/chic {
-    /n 1 def
-    /egg2 {n} def
-    m n
-    egg1
-    egg2
-    stack} def
-n
-chic  
-"""
-
-
-input3 = """
-/x 10 def
-/A { x } def
-/C { /x 40 def A stack } def
-/B { /x 30 def /A { x } def C } def
-B
-"""
-
 
 if __name__ == '__main__':
    testAllInputs() 
