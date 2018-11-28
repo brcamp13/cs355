@@ -537,7 +537,7 @@ def interpreter(s, scope): # s is a string
 def testAllInputs():
 
     print('Input 2 test:')
-    interpreter(input2, 'dynamic')
+    interpreter(input3, 'dynamic')
     print('\n')
     assignment1Functions.op_stack[:] = []
     assignment1Functions.dict_stack[:] = []
@@ -570,8 +570,11 @@ chic
 
 
 input3 = """
-  [9 9 8 4 10] {dup 5 lt {pop} if}  forall 
-  stack 
+/x 10 def
+/A { x } def
+/C { /x 40 def A stack } def
+/B { /x 30 def /A { x } def C } def
+B
 """
 
 input4 = """
