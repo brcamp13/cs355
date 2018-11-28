@@ -164,7 +164,7 @@ def isArray(value):
     if not isinstance(value, str):
         return False
     else: 
-        if len(value) < 3:
+        if len(value) < 10:
             return False
         else: 
             # Increments by 2 starting from the second value, checking if each value is an integer
@@ -267,17 +267,81 @@ def newDef(name, value):
     dict_to_push = {name: value}
     assignment1Functions.dict_stack[-1][0].update(dict_to_push)
 
+def new_ps_def():
 
-def newDynamicLookup():
-    pass
+    
+    # Check if there are enough values on the operand stack and if values are in the correct format
+    if len(assignment1Functions.op_stack) < 2:
+        print("There are not enough values on the operand stack to perform the operation")
+        return
+
+    # Get the first two variables from the operand stack
+    value_1 = assignment1Functions.op_pop()
+    value_2 = assignment1Functions.op_pop()
+
+    if value_2[0] != '/':
+        assignment1Functions.op_push(value_2)
+        assignment1Functions.op_push(value_1)
+        print("The entry is not in the correct format")
+
+        # Take the '/' from the name and then add to the dictionary at the top of the dict stack
+    else:
+        new_value_2 = value_2[1:]
+        newDef(new_value_2, value_1)
 
 
-def newStaticLookup():
-    pass
+# Basically the same lookup function as the previous assignment, but adjusted for a list of tuples rather than dictionaries
+def newDynamicLookup(name):
+
+    for item in reversed(assignment1Functions.dict_stack):
+        for key, value in item[0].items():
+            if key == name:
+                return value
+            else: 
+                continue
+
+    print('No dictionary with that name in the dictionary stack!')
 
 
-def findStaticLink():
-    pass
+# Recursive function that follows static links until a value is found
+def newStaticLookup(currentTuple, lookupKey):
+    
+    # This is the static link number
+    staticIndex = currentTuple[1]
+
+    # Look through the dictionary in the tuple
+    for key, value in currentTuple[0].items():
+        if key == lookupKey:
+            # If you find the key, then return the value of that key
+            return value
+        
+        else: 
+            continue
+        
+    # If key not in current tuple dictionary, then follow the static link to outer scope and go through this function again  
+    return newStaticLookup(assignment1Functions.dict_stack[staticIndex], lookupKey)
+
+
+
+
+def findStaticLink(currentTuple, lookupKey):
+    
+    # This is the static link number
+    staticIndex = currentTuple[1]
+
+    # Look through the dictionary in the tuple
+    for key, value in currentTuple[0].items():
+        if key == lookupKey:
+            # If you find the key, then return the index of the tuple in the dict stack
+            return assignment1Functions.dict_stack.index(currentTuple)
+        else: 
+            continue
+    else:
+        # If key not in current tuple dictionary, then follow the static link to outer scope and go through this function again  
+        return findStaticLink(assignment1Functions.dict_stack[staticIndex], lookupKey)
+
+
+
 
 def newStack():
 
@@ -285,7 +349,7 @@ def newStack():
 
     print('============')
 
-    for item in list(assignment1Functions.op_stack):
+    for item in list(reversed(assignment1Functions.op_stack)):
         print(item) 
 
     print('============')
@@ -315,9 +379,9 @@ def newStack():
     #DONE Dictionary stack needs to be comprised of tuples with (stuff from scope, static link):
     #DONE Initially populate dict stack with ({}, 0)
     #DONE Go through given scope. When you encounter 'def', you will need to adjust 'def' function so that it inserts into first value in tuple vs. just dict like before
-    # When you encounter a lookup situation, you will first check if the value exists in the dictionary of the current scope. 
+    #DONE When you encounter a lookup situation, you will first check if the value exists in the dictionary of the current scope. 
         # and if it doesn't exist there, follow the activation record of the current scope and check the corresponding dictionary there
-    # When you encounter a function call (a lookup that yields a code array) you will firstly need to perform the lookup and obtain the code array
+    #DONE When you encounter a function call (a lookup that yields a code array) you will firstly need to perform the lookup and obtain the code array
         # Then you must insert an empty tuple dictionary entry to stack. Have a helper function to determine the static link for the function (where it was defined)
     # Then, recursively call the interpreter again
     # Once you finish the function execution, pop the top dictionary from the dict stack
@@ -329,7 +393,6 @@ def interpretSPS(code, scope):
     postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
     ,'for', 'forall', 'length', 'get', 'dup', 'exch', 'pop', 'copy', 'clear', 'def', 'stack']
 
-    assignment1Functions.dict_push(({}, 0))
 
     for item in code: 
         if isinstance(item, str):
@@ -392,23 +455,52 @@ def interpretSPS(code, scope):
                 elif item == 'clear':
                     assignment1Functions.clear() 
                 elif item == 'def': 
-                    assignment1Functions.ps_def()
+                    new_ps_def()
                 elif item == 'stack':
-                    assignment1Functions.stack()
+                    newStack()
         
             # If the item is a name lookup
             # If lookup yields a code array, then execute that code array. 
             # Otherwise, push the value to the operand stack 
             else:
-                value = assignment1Functions.lookup(item)
-                if type(value) == list: 
-                    if all(isinstance(x, int) for x in value):
-                        assignment1Functions.op_push(value)
-                    else:
-                        interpretSPS(value)
+                if scope == 'dynamic':
+                    value = newDynamicLookup(item)
+                    if type(value) == list: 
+                        # If it is an integer array
+                        if all(isinstance(x, int) for x in value):
+                            assignment1Functions.op_push(value)
+                        # If it is a code array
+                        else:
+                            # Push new tuple to dict stack with correct static link
+                            assignment1Functions.dict_push(({}, 0))
 
-                else: 
-                    assignment1Functions.op_push(value)
+                            interpretSPS(value, scope)
+                            assignment1Functions.dict_pop()
+                    #If the lookup yields a non-list or non-code array then push it to operand stack 
+                    else: 
+                        assignment1Functions.op_push(value)
+
+                elif scope == 'static':
+                    # Do the static lookup starting at the top value in the dictionary stack
+                    value = newStaticLookup(assignment1Functions.dict_stack[-1], item)
+                    if type(value) == list: 
+                        # If it is an integer array
+                        if all(isinstance(x, int) for x in value):
+                            assignment1Functions.op_push(value)
+                        # If it is a code array
+                        else:
+                            # Get the static link
+                            staticLink = findStaticLink(assignment1Functions.dict_stack[-1], item)
+                            # Push new tuple to dict stack with correct static link
+                            assignment1Functions.dict_push(({}, staticLink))
+                            interpretSPS(value, scope)
+                            # Pop the top dictionary from the stack once function execution has completed
+                            assignment1Functions.dict_pop()
+
+                    #If the lookup yields a non-list or non-code array then push it to operand stack 
+                    else: 
+                        assignment1Functions.op_push(value)
+
         
         # If the item is a list (int array or code array), then push to op stack
         elif type(item) == list: 
@@ -436,53 +528,17 @@ def interpreter(s, scope): # s is a string
     almostFinalVariable = turnIntArraysToLists(variable)
     # Converts every value into its proper type (int, float, bool). This will be the final input that will be interpreted 
     finalVariable = stringsToCorrectTypes(almostFinalVariable)
+    # Add empty tuple to dict stack 
+    assignment1Functions.dict_push(({}, 0))
     # Interpret this input by calling the 'interpreterSPS' function
     interpretSPS(finalVariable, scope)
 
 
 def testAllInputs():
 
-    print('Input 1 test:')
-    interpreter(input1)
-    print('\n')
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
     print('Input 2 test:')
-    interpreter(input2)
+    interpreter(input2, 'dynamic')
     print('\n')
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    print('Input 3 test:')
-    interpreter(input3)
-    print('\n')
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    print('Input 4 test:')
-    interpreter(input4)
-    print('\n')
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    # Stack should show 'True'
-    print('My first test input:')
-    interpreter(myTestInput1)
-    print('\n')
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    # Stack should show 'True'
-    print('My second test input:')
-    interpreter(myTestInput2)
-    print('\n')
-    assignment1Functions.op_stack[:] = []
-    assignment1Functions.dict_stack[:] = []
-
-    # Stack should show '10'
-    print('My third test input:')
-    interpreter(myTestInput3)
     assignment1Functions.op_stack[:] = []
     assignment1Functions.dict_stack[:] = []
 
@@ -490,25 +546,26 @@ def testAllInputs():
 # testing
 
 input1 = """
-  /square {dup mul} def  
-  [1 2 3 4] {square} forall 
-  add add add 30 eq true 
-  stack
+  /x 4 def
+  /g {x stack} def
+  /f {/x 7 def g} def
+  f
 """
 
 
 input2 = """ 
-  [1 2 3 4 5] dup length /n exch def
-  /fact {
-      0 dict begin
-         /n exch def
-         n 2 lt
-         { 1}
-         {n 1 sub fact n mul }
-         ifelse
-      end 
-  } def
-  n fact stack    
+/m 50 def 
+/n 100 def
+/egg1 {/m 25 def n} def
+/chic {
+    /n 1 def
+    /egg2 {n} def
+    m n
+    egg1
+    egg2
+    stack} def
+n
+chic  
 """
 
 
@@ -542,13 +599,7 @@ myTestInput3 = """
 """
 
 if __name__ == '__main__':
-    assignment1Functions.op_push(4)
-    assignment1Functions.op_push(5)
-    assignment1Functions.dict_push(({}, 0))
-    assignment1Functions.dict_push(({'a': 4}, 0)) 
-    assignment1Functions.dict_push(({'b': 6, 'c': 32}, 1))
-    newStack()
-    newDef('e', 0)
-    newStack()
+
+   testAllInputs() 
     
       
