@@ -373,7 +373,7 @@ def newStack(scope):
 #~~~~~~~INTERPRETATION IMPLEMENTATION~~~~~~~~~~
 
 # The actual recursive main function, now implemented with a scope parameter
-def interpretSPS(code, scope): 
+def interpretSPS(code, scope):
 
     postscriptOperations = ['add', 'sub', 'mul', 'div', 'eq', 'lt', 'gt', 'and', 'or', 'not', 'if', 'ifelse'
     ,'for', 'forall', 'length', 'get', 'dup', 'exch', 'pop', 'copy', 'clear', 'def', 'stack']
@@ -505,7 +505,8 @@ def interpretSPS(code, scope):
     return
     
     
-def interpreter(s, scope): # s is a string
+def interpreter(s, scope): # s is a string, scope is either 'dynamic' or static
+
 
     # Turn input into python list of strings, all code arrays are python lists
     variable = parse(tokenize(s))
@@ -554,6 +555,24 @@ input3 = """
 B
 """
 
+# My own test inputs
+
+input4 = """
+/x 35 def
+/A { x } def
+/C { /x 25 def A stack } def
+/B { /x 15 def /A { x } def C } def
+B
+"""
+
+input5 = """
+/x 3 5 add def
+/A { x } def
+/C { /x 25 def A stack } def
+/B { /x 15 def /A { x } def C } def
+B
+"""
+
 
 def testAllInputs():
 
@@ -586,6 +605,30 @@ def testAllInputs():
     assignment1Functions.op_stack[:] = []
     assignment1Functions.dict_stack[:] = []
     interpreter(input3, 'dynamic')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    # My own test cases
+
+    print('Input 4 tests:')
+    print('\n')
+    interpreter(input4, 'static')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+    interpreter(input4, 'dynamic')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+
+    print('Input 5 tests:')
+    print('\n')
+    interpreter(input5, 'static')
+    print('\n')
+    assignment1Functions.op_stack[:] = []
+    assignment1Functions.dict_stack[:] = []
+    interpreter(input5, 'dynamic')
     print('\n')
     assignment1Functions.op_stack[:] = []
     assignment1Functions.dict_stack[:] = []
