@@ -1,3 +1,8 @@
+//Brandon Campbell (ID: 11519869)
+// CPTS 355 Fall 2018
+// Assignment 6
+
+
 /*
 Part of the code for drawing the game board has beed adapted from http://zetcode.com/tutorials/javagamestutorial/tetris/  
 */

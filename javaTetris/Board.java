@@ -1,9 +1,3 @@
-//Brandon Campbell (ID: 11519869)
-// CPTS 355 Fall 2018
-// Assignment 6
-
-
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -287,6 +281,7 @@ public class Board extends JPanel
         return true;
     }
 
+    //Function that recursively goes explores around a cell, and determines if there are any potential matches
     public void deletePieces(int xValue, int yValue, char searchValue) {
 
         /*Increase count of things in a row, mark the cell as seen, and mark it as a place to potentially delete*/
@@ -313,7 +308,6 @@ public class Board extends JPanel
     }
 
     //Function that checks if the '355' configuration exists anywhere on the board
-    //This is an absolutely horrible function, but I just needed it to work
     public boolean specialCheck(){ 
         for (int i = 0; i < BOARD_HEIGHT; i++) {
         	for (int j = 0; j < BOARD_WIDTH; j++) {
