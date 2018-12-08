@@ -348,6 +348,7 @@ public class Board extends JPanel
         for (int i = 0; i < BOARD_HEIGHT; i++) {
         	for (int j = 0; j < BOARD_WIDTH; j++) {
 
+                //If the current piece is a part of a '355' configuration, then delete it, fill gaps, update score. 
                 if(specialCheck() == true){
                     deleteValues();
                     deletePotentials();
@@ -357,6 +358,7 @@ public class Board extends JPanel
                     shiftDown();
                 }
 
+                //If the current cell is occupied, then explore around, seeing if it's connected to a removable piece. 
                 if((board[j][i]) != SPACE && seenValues[j][i] == SPACE){
                     deletePieces(j, i, board[j][i]);
                     if(countOfConsecutive > 2){
