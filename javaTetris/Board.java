@@ -1,3 +1,9 @@
+//Brandon Campbell (ID: 11519869)
+// CPTS 355 Fall 2018
+// Assignment 6
+
+
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -306,11 +312,57 @@ public class Board extends JPanel
        
     }
 
-    // Goes through every character in the array and if it isn't a space, checks if it is connected in a removable piece
+    //Function that checks if the '355' configuration exists anywhere on the board
+    //This is an absolutely horrible function, but I just needed it to work
+    public boolean specialCheck(){ 
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+        	for (int j = 0; j < BOARD_WIDTH; j++) {
+                if(board[j][i] == '3'){
+                    if(j <= BOARD_WIDTH - 3 && board[j+1][i] == '5' && board[j+2][i] == '5'){
+                        potentialDeletionLocations[j][i] = '1';
+                        potentialDeletionLocations[j+1][i] = '1';
+                        potentialDeletionLocations[j+2][i] = '1';
+                        return true; 
+                    } else if(i <= BOARD_HEIGHT - 3 && board[j][i+1] == '5' && board[j][i+2] == '5'){
+                        potentialDeletionLocations[j][i] = '1';
+                        potentialDeletionLocations[j][i+1] = '1';
+                        potentialDeletionLocations[j][i+2] = '1';
+                        return true;
+                    }
+                }if(board[j][i] == '5'){
+                    if(j <= BOARD_WIDTH - 3 && board[j+1][i] == '5' && board[j+2][i] == '3'){
+                        potentialDeletionLocations[j][i] = '1';
+                        potentialDeletionLocations[j+1][i] = '1';
+                        potentialDeletionLocations[j+2][i] = '1';
+                        return true; 
+                    } else if(i <= BOARD_HEIGHT - 3 && board[j][i+1] == '5' && board[j][i+2] == '3'){
+                        potentialDeletionLocations[j][i] = '1';
+                        potentialDeletionLocations[j][i+1] = '1';
+                        potentialDeletionLocations[j][i+2] = '1';
+                        return true; 
+                    }  
+        	    }
+            }
+        }
+        return false; 
+    }  
+
+    // Goes through every character in the array and if it isn't a space, checks if it is connected in a removable piece.
+    // If it is, then delete that piece, update scores, shift columns down if there are any gaps. 
     public void visitAllCharacters() {
         int roundScore = 0; 
         for (int i = 0; i < BOARD_HEIGHT; i++) {
         	for (int j = 0; j < BOARD_WIDTH; j++) {
+
+                if(specialCheck() == true){
+                    deleteValues();
+                    deletePotentials();
+                    roundScore = 35;
+                    this.thePlayer.setNumPieces(this.thePlayer.getPieces() + 3);
+                    this.thePlayer.setScore(this.thePlayer.getScore() + roundScore);
+                    shiftDown();
+                }
+
                 if((board[j][i]) != SPACE && seenValues[j][i] == SPACE){
                     deletePieces(j, i, board[j][i]);
                     if(countOfConsecutive > 2){
@@ -356,7 +408,7 @@ public class Board extends JPanel
         }
     }
 
-    //Function that shifts down columns when there are any gaps after deletions
+    //Function that shifts down columns (1 or 2 spaces) once some blocks have been deleted
     private void shiftDown() {
         boolean twoSpaces = false;
         for (int i = 0; i < BOARD_HEIGHT; i++) {
@@ -420,10 +472,12 @@ public class Board extends JPanel
         
         board[curPiece.getX()][curPiece.getY()] = curPiece.getNumber();
 
+        //If there has been a deletion/score (determined on whether or not a column had to be shifted), go through the board again
+        // and check if there are any blocks to be deleted/scored after the column shift occurred. 
         while(true){
             visitAllCharacters(); 
             if(somethingShifted){
-                somethingShifted = false; 
+                somethingShifted = false;
                 visitAllCharacters();
             }else{
                 break;
