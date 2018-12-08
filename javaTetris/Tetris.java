@@ -32,8 +32,8 @@ public class Tetris extends JFrame {
     	/* create a panel including the status and score labels */
     	JPanel panel=new JPanel ();
         statusbar = new JLabel(" ");
-        scorebar = new JLabel("0");
-        scoretext = new JLabel("Score");
+        scorebar = new JLabel("Score: 0");
+        scoretext = new JLabel("Blocks: 0");
         
        
         

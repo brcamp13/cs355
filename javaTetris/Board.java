@@ -43,7 +43,9 @@ public class Board extends JPanel
     private char [][] board; //The board grid
     private char [][] seenValues; //Denotes all values that have been 'seen'
     private char [][] potentialDeletionLocations; //Denotes all values that will potentially be deleted (if > 2 of same in a row)
-
+    private boolean somethingShifted = false; 
+    private Player thePlayer = new Player();
+    
     
     public Board(Tetris parent) {
 
@@ -128,7 +130,7 @@ public class Board extends JPanel
         
         createNewPiece();
         timer.start();
-        clearBoard();
+        clearBoard(); 
     }
     /* Pause the game. */  
     private void pause()  {
@@ -235,6 +237,9 @@ public class Board extends JPanel
     private void pieceDropped() {                
         updateBoard(curPiece); 
 
+        this.scoretext.setText("Blocks: " + String.valueOf(this.thePlayer.getPieces()));
+        this.scorebar.setText("Score: " + String.valueOf(this.thePlayer.getScore()));
+
         if (!isFallingFinished)
             createNewPiece();
     }
@@ -303,7 +308,7 @@ public class Board extends JPanel
 
     // Goes through every character in the array and if it isn't a space, checks if it is connected in a removable piece
     public void visitAllCharacters() {
-
+        int roundScore = 0; 
         for (int i = 0; i < BOARD_HEIGHT; i++) {
         	for (int j = 0; j < BOARD_WIDTH; j++) {
                 if((board[j][i]) != SPACE && seenValues[j][i] == SPACE){
@@ -311,6 +316,9 @@ public class Board extends JPanel
                     if(countOfConsecutive > 2){
                         deleteValues();
                         deletePotentials();
+                        roundScore = countOfConsecutive * 5; 
+                        this.thePlayer.setNumPieces(this.thePlayer.getPieces() + countOfConsecutive);
+                        this.thePlayer.setScore(this.thePlayer.getScore() + roundScore);
                         countOfConsecutive = 0;
                         shiftDown();   
                     }else{
@@ -355,6 +363,7 @@ public class Board extends JPanel
         	for (int j = 0; j < BOARD_WIDTH; j++) {
                 
                 if(board[j][i] == SPACE && checkIfAnyElements(j, i)){
+                    somethingShifted = true; 
                     if(board[j][i-1] == SPACE){
                         twoSpaces = true;
                     }
@@ -411,13 +420,16 @@ public class Board extends JPanel
         
         board[curPiece.getX()][curPiece.getY()] = curPiece.getNumber();
 
-        visitAllCharacters(); 
+        while(true){
+            visitAllCharacters(); 
+            if(somethingShifted){
+                somethingShifted = false; 
+                visitAllCharacters();
+            }else{
+                break;
+            }
+        }
        
-    	/*TODO*/
-        /*Update the Board: 
-         * clear all cell groups including 3 (or more) matching adjacent cells
-         * clear all cell groups including the target characters */
-
      }
 
   
